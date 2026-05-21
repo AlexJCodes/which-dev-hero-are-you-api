@@ -26,3 +26,11 @@ export type Question = {
     text: string
     options: AnswerOption[]
 }
+
+export type Submission = {
+    id: string
+    username: string
+    answers: string[]
+    resultId: string
+    createdAt: string
+}

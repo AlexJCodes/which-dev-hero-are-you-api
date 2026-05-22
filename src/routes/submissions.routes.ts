@@ -7,7 +7,6 @@ import { calculateResult } from "../utils/calculateResult"
 export const submissionsRouter = express.Router()
 
 // GET
-
 submissionsRouter.get('/', (req: Request, res: Response) => {
     res.json(submissions)
 })
@@ -20,7 +19,7 @@ submissionsRouter.get('/:id', (req: Request, res: Response) => {
 
     if (!submission) {
         return res.status(404).json({
-            message: 'Submission with id ${id} was not found',
+            message: `Submission with id ${id} was not found`,
         })
     }
 
@@ -33,7 +32,7 @@ submissionsRouter.post('/', (req: Request, res: Response) => {
 
     if (!username || !Array.isArray(answers)) {
         return res.status(400).json({
-            message: "Username and answers array are required",
+            message: 'Username and answers array are required',
         })
     }
 
@@ -54,4 +53,51 @@ submissionsRouter.post('/', (req: Request, res: Response) => {
 
     // Return submission
     res.status(201).json(newSubmission)
+})
+
+// PATCH by id
+submissionsRouter.patch('/:id', (req: Request, res: Response) => {
+    const { id } = req.params
+    const { username, answers } = req.body
+
+    // Find submission index:
+    const submissionIndex = submissions.findIndex(
+        (submission) => submission.id === id,
+    )
+
+    if (submissionIndex === -1) {
+        return res.status(404).json({
+            message: `Submission with id ${id} was not found`,
+        })
+    }
+
+    // Get existing submission:
+    const existingSubmission = submissions[submissionIndex]
+
+    // Validate
+    if (answers !== undefined && !Array.isArray(answers)) {
+        return res.status(400).json({
+            message: 'Answers must be an array.',
+        })
+    }
+
+    // Updated submission
+    // If answers and user are provided, recalculate the result:
+    // If answers and user are not provided, keep the existing answers and result.
+    const updatedAnswers = answers ?? existingSubmission.answers
+
+    // If answers are updated, we need to recalculate the result. 
+    const updatedSubmission = {
+        // Copy existing submission.
+        ...existingSubmission,
+        // Update username and answers if provided, otherwise keep existing values.
+        username: username ?? existingSubmission.username,
+        answers: updatedAnswers,
+        resultId: calculateResult(updatedAnswers),
+    }
+
+    submissions[submissionIndex] = updatedSubmission
+
+    // return updated submission
+    res.json(updatedSubmission)
 })

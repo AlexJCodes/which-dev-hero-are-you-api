@@ -12,6 +12,21 @@ submissionsRouter.get('/', (req: Request, res: Response) => {
     res.json(submissions)
 })
 
+// GET by id
+submissionsRouter.get('/:id', (req: Request, res: Response) => {
+    const { id } = req.params
+
+    const submission = submissions.find((submission) => submission.id === id)
+
+    if (!submission) {
+        return res.status(404).json({
+            message: 'Submission with id ${id} was not found',
+        })
+    }
+
+    res.json(submission)
+})
+
 // POST
 submissionsRouter.post('/', (req: Request, res: Response) => {
     const { username, answers } = req.body

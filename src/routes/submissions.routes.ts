@@ -6,12 +6,16 @@ import { calculateResult } from "../utils/calculateResult"
 // Separate router for submissions
 export const submissionsRouter = express.Router()
 
-// GET
+// ----------------------------------------------------------- //
+// ------------------------ GET ------------------------------ //
+// ----------------------------------------------------------- //
 submissionsRouter.get('/', (req: Request, res: Response) => {
     res.json(submissions)
 })
 
-// GET by id
+// ----------------------------------------------------------- //
+// ---------------------- GET BY ID -------------------------- //
+// ----------------------------------------------------------- //
 submissionsRouter.get('/:id', (req: Request, res: Response) => {
     const { id } = req.params
 
@@ -26,7 +30,9 @@ submissionsRouter.get('/:id', (req: Request, res: Response) => {
     res.json(submission)
 })
 
-// POST
+// ----------------------------------------------------------- //
+// ----------------------- POST ------------------------------ //
+// ----------------------------------------------------------- //
 submissionsRouter.post('/', (req: Request, res: Response) => {
     const { username, answers } = req.body
 
@@ -55,7 +61,9 @@ submissionsRouter.post('/', (req: Request, res: Response) => {
     res.status(201).json(newSubmission)
 })
 
-// PATCH by id
+// ----------------------------------------------------------- //
+// -------------------- PATCH BY ID -------------------------- //
+// ----------------------------------------------------------- //
 submissionsRouter.patch('/:id', (req: Request, res: Response) => {
     const { id } = req.params
     const { username, answers } = req.body
@@ -100,4 +108,28 @@ submissionsRouter.patch('/:id', (req: Request, res: Response) => {
 
     // return updated submission
     res.json(updatedSubmission)
+})
+
+// ----------------------------------------------------------- //
+// --------------------- DELETE BY ID ------------------------ //
+// ----------------------------------------------------------- //
+
+submissionsRouter.delete('/:id', (req:Request, res: Response) => {
+    const { id } = req.params
+
+    const submissionIndex = submissions.findIndex(
+        (submission) => submission.id === id,
+    )
+
+    if (submissionIndex === -1) {
+        return res.status(404).json({
+            message: `Submission with id ${id} was not found`,
+        })
+    }
+
+    // Delete submission from array:
+    submissions.splice(submissionIndex, 1)
+
+    // Return (praxis with 204):
+    res.status(204).send()
 })

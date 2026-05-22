@@ -6,6 +6,12 @@ import { calculateResult } from "../utils/calculateResult"
 // Separate router for submissions
 export const submissionsRouter = express.Router()
 
+// GET
+
+submissionsRouter.get('/', (req: Request, res: Response) => {
+    res.json(submissions)
+})
+
 // POST
 submissionsRouter.post('/', (req: Request, res: Response) => {
     const { username, answers } = req.body

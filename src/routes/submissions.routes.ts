@@ -2,6 +2,7 @@ import express, { Request, Response } from "express"
 
 import { submissions } from "../data/submissions"
 import { calculateResult } from "../utils/calculateResult"
+import { validateAnswers } from "../utils/validateAnswers"
 
 // Separate router for submissions
 export const submissionsRouter = express.Router()
@@ -49,9 +50,31 @@ submissionsRouter.post('/', async (req: Request, res: Response) => {
     try {
         const { username, answers } = req.body
 
-        if (!username || !Array.isArray(answers)) {
+        // Validate username
+        if (!username || typeof username !== 'string') {
             return res.status(400).json({
-                message: 'Username and answers array are required',
+                message: 'Username is required and must be a string',
+            })
+        }
+
+        // Validate answers type
+        if (!Array.isArray(answers)) {
+            return res.status(400).json({
+                message: 'Answers are required and must be an array',
+            })
+        }
+
+        // Validate answers content
+        if (answers.length === 0) {
+            return res.status(400).json({
+                message: 'Answers array cannot be empty',
+            })
+        }
+
+        // Validate that all answers match existing character ids
+        if (!validateAnswers(answers)) {
+            return res.status(400).json({
+                message: 'Answers contain invalid character ids',
             })
         }
 
@@ -101,10 +124,31 @@ submissionsRouter.patch('/:id', async (req: Request, res: Response) => {
         // Get existing submission:
         const existingSubmission = submissions[submissionIndex]
 
-        // Validate
+        // Validate username only if username was provided
+        if (username !== undefined && typeof username !== 'string') {
+            return res.status(400).json({
+                message: 'Username must be a string',
+            })
+        }
+
+        // Validate answers only if answers was provided
         if (answers !== undefined && !Array.isArray(answers)) {
             return res.status(400).json({
-                message: 'Answers must be an array.',
+                message: 'Answers must be an array',
+            })
+        }
+
+        // Validate answers content only if answers was provided
+        if (answers !== undefined && answers.length === 0) {
+            return res.status(400).json({
+                message: 'Answers array cannot be empty',
+            })
+        }
+
+        // Validate that all provided answers match existing character ids
+        if (answers !== undefined && !validateAnswers(answers)) {
+            return res.status(400).json({
+                message: 'Answers contain invalid character ids',
             })
         }
 

@@ -1,8 +1,9 @@
-import express, { Request, Response } from 'express';
+import express, { Request, Response } from 'express'
 
-import { submissionsRouter } from './routes/submissions.routes';
-import { questionsRouter } from './routes/questions.routes';
-import { charactersRouter } from './routes/characters.routes';
+import { submissionsRouter } from './routes/submissions.routes'
+import { questionsRouter } from './routes/questions.routes'
+import { charactersRouter } from './routes/characters.routes'
+import cors from 'cors'
 
 const app = express();
 
@@ -10,6 +11,7 @@ const PORT = 3000;
 
 // Middleware to parse JSON bodies
 app.use(express.json())
+app.use(cors())
 
 // Test route
 app.get('/', (req: Request, res: Response) => {
@@ -17,13 +19,13 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 // Route - questions
-app.use("/questions", questionsRouter);
+app.use("/questions", questionsRouter)
 
 // Route - characters
-app.use("/characters", charactersRouter);
+app.use("/characters", charactersRouter)
 
 // Route - submissions
-app.use("/submissions", submissionsRouter);
+app.use("/submissions", submissionsRouter)
 
 // Start the server
 app.listen(PORT, () => {

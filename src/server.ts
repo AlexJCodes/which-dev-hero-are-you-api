@@ -1,8 +1,8 @@
 import express, { Request, Response } from 'express';
 
-import { characters } from './data/characters';
-import { questions } from './data/questions';
 import { submissionsRouter } from './routes/submissions.routes';
+import { questionsRouter } from './routes/questions.routes';
+import { charactersRouter } from './routes/characters.routes';
 
 const app = express();
 
@@ -13,18 +13,14 @@ app.use(express.json())
 
 // Test route
 app.get('/', (req: Request, res: Response) => {
-  res.json({ message: 'Welcome to the Which Dev Hero Are You API!' })
+    res.json({ message: 'Welcome to the Which Dev Hero Are You API!' })
 });
 
 // Route - questions
-app.get('/questions', (req: Request, res: Response) => {
-    res.json(questions)
-})
+app.use("/questions", questionsRouter);
 
 // Route - characters
-app.get('/characters', (req: Request, res: Response) => {
-    res.json(characters)
-})
+app.use("/characters", charactersRouter);
 
 // Route - submissions
 app.use("/submissions", submissionsRouter);

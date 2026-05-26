@@ -4,6 +4,7 @@ import { submissionsRouter } from './routes/submissions.routes'
 import { questionsRouter } from './routes/questions.routes'
 import { charactersRouter } from './routes/characters.routes'
 import cors from 'cors'
+import { statsRouter } from './routes/stats.routes'
 
 const app = express();
 
@@ -26,6 +27,9 @@ app.use("/characters", charactersRouter)
 
 // Route - submissions
 app.use("/submissions", submissionsRouter)
+
+// Route - stats
+app.use('/stats', statsRouter)
 
 // Start the server
 app.listen(PORT, () => {

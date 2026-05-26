@@ -34,3 +34,11 @@ export type Submission = {
     resultId: string
     createdAt: string
 }
+
+// Stats
+
+export type QuizStats = {
+    totalSubmissions: number
+    resultCounts: Record<string, number>
+    mostCommonResult: string | null
+}

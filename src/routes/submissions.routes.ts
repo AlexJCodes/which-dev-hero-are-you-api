@@ -1,6 +1,11 @@
 import express, { type Request, type Response } from 'express'
-
-import { submissions } from '../data/submissions'
+import {
+	createSubmission,
+	deleteSubmission,
+	getAllSubmissions,
+	getSubmissionById,
+	updateSubmission,
+} from '../repositories/submissionsRepository'
 import { createErrorResponse } from '../utils/apiResponse'
 import { calculateResult } from '../utils/calculateResult'
 import { validateAnswers } from '../utils/validateAnswers'
@@ -13,7 +18,9 @@ export const submissionsRouter = express.Router()
 // ----------------------------------------------------------- //
 submissionsRouter.get('/', async (_req: Request, res: Response) => {
 	try {
-		res.json(submissions)
+		const allSubmissions = await getAllSubmissions()
+
+		res.json(allSubmissions)
 	} catch (error) {
 		console.error(error)
 
@@ -24,11 +31,11 @@ submissionsRouter.get('/', async (_req: Request, res: Response) => {
 // ----------------------------------------------------------- //
 // ---------------------- GET BY ID -------------------------- //
 // ----------------------------------------------------------- //
-submissionsRouter.get('/:id', async (req: Request, res: Response) => {
+submissionsRouter.get('/:id', async (req: Request<{ id: string }>, res: Response) => {
 	try {
 		const { id } = req.params
 
-		const submission = submissions.find((submission) => submission.id === id)
+		const submission = await getSubmissionById(id)
 
 		if (!submission) {
 			return res.status(404).json(createErrorResponse(`Submission with id ${id} was not found`))
@@ -82,10 +89,10 @@ submissionsRouter.post('/', async (req: Request, res: Response) => {
 		}
 
 		// Save submission in memory-array
-		submissions.push(newSubmission)
+		const createdSubmission = await createSubmission(newSubmission)
 
 		// Return submission
-		res.status(201).json(newSubmission)
+		res.status(201).json(createdSubmission)
 	} catch (error) {
 		console.error(error)
 
@@ -96,20 +103,17 @@ submissionsRouter.post('/', async (req: Request, res: Response) => {
 // ----------------------------------------------------------- //
 // -------------------- PATCH BY ID -------------------------- //
 // ----------------------------------------------------------- //
-submissionsRouter.patch('/:id', async (req: Request, res: Response) => {
+submissionsRouter.patch('/:id', async (req: Request<{ id: string }>, res: Response) => {
 	try {
 		const { id } = req.params
 		const { username, answers } = req.body
 
 		// Find submission index:
-		const submissionIndex = submissions.findIndex((submission) => submission.id === id)
+		const existingSubmission = await getSubmissionById(id)
 
-		if (submissionIndex === -1) {
+		if (!existingSubmission) {
 			return res.status(404).json(createErrorResponse(`Submission with id ${id} was not found`))
 		}
-
-		// Get existing submission:
-		const existingSubmission = submissions[submissionIndex]
 
 		// Validate username only if username was provided
 		if (username !== undefined && typeof username !== 'string') {
@@ -145,10 +149,10 @@ submissionsRouter.patch('/:id', async (req: Request, res: Response) => {
 			resultId: calculateResult(updatedAnswers),
 		}
 
-		submissions[submissionIndex] = updatedSubmission
+		const savedSubmission = await updateSubmission(id, updatedSubmission)
 
 		// return updated submission
-		res.json(updatedSubmission)
+		res.json(savedSubmission)
 	} catch (error) {
 		console.error(error)
 
@@ -160,20 +164,16 @@ submissionsRouter.patch('/:id', async (req: Request, res: Response) => {
 // --------------------- DELETE BY ID ------------------------ //
 // ----------------------------------------------------------- //
 
-submissionsRouter.delete('/:id', async (req: Request, res: Response) => {
+submissionsRouter.delete('/:id', async (req: Request<{ id: string }>, res: Response) => {
 	try {
 		const { id } = req.params
 
-		const submissionIndex = submissions.findIndex((submission) => submission.id === id)
+		const wasDeleted = await deleteSubmission(id)
 
-		if (submissionIndex === -1) {
+		if (!wasDeleted) {
 			return res.status(404).json(createErrorResponse(`Submission with id ${id} was not found`))
 		}
 
-		// Delete submission from array:
-		submissions.splice(submissionIndex, 1)
-
-		// Return (praxis with 204 = no content, since the submission is deleted and there is nothing to return):
 		res.status(204).send()
 	} catch (error) {
 		console.error(error)

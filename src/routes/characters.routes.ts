@@ -1,6 +1,6 @@
 import express, { type Request, type Response } from 'express'
-
 import { characters } from '../data/characters'
+import { createErrorResponse } from '../utils/apiResponse'
 
 export const charactersRouter = express.Router()
 
@@ -14,6 +14,6 @@ charactersRouter.get('/', async (_req: Request, res: Response) => {
 	} catch (error) {
 		console.error(error)
 
-		res.status(500).json({ message: 'Error occurred while fetching characters' })
+		res.status(500).json(createErrorResponse('Error occurred while fetching characters'))
 	}
 })

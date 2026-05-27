@@ -1,6 +1,6 @@
 import express, { type Request, type Response } from 'express'
-
 import { submissions } from '../data/submissions'
+import { createErrorResponse } from '../utils/apiResponse'
 import { calculateStats } from '../utils/calculateStats'
 
 // Stat-related routes
@@ -15,8 +15,6 @@ statsRouter.get('/', async (_req: Request, res: Response) => {
 	} catch (error) {
 		console.error(error)
 
-		res.status(500).json({
-			message: 'Error occurred while fetching quiz statistics',
-		})
+		res.status(500).json(createErrorResponse('Error occurred while fetching quiz statistics'))
 	}
 })

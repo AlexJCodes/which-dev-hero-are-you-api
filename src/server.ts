@@ -6,12 +6,13 @@ import { statsRouter } from './routes/stats.routes'
 import { submissionsRouter } from './routes/submissions.routes'
 import 'dotenv/config'
 import helmet from 'helmet'
+import { env } from './config/env'
 import { errorHandler } from './middleware/errorHandler'
 import { notFoundHandler } from './middleware/notFoundHandler'
 
 const app = express()
 
-const PORT = Number(process.env.PORT) || 3000
+const PORT = env.port
 
 // Middleware to set security-related HTTP headers
 app.use(helmet())
@@ -20,7 +21,7 @@ app.use(helmet())
 app.use(express.json())
 
 // Middleware to enable CORS
-const allowedOrigin = process.env.CLIENT_ORIGIN || 'http://localhost:5173'
+const allowedOrigin = env.clientOrigin
 
 app.use(
 	cors({

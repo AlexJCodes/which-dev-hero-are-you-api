@@ -11,12 +11,20 @@ const app = express()
 
 const PORT = Number(process.env.PORT) || 3000
 
-// Middleware to parse JSON bodies
-app.use(express.json())
-// Middleware to enable CORS
-app.use(cors())
 // Middleware to set security-related HTTP headers
 app.use(helmet())
+
+// Middleware to parse JSON bodies
+app.use(express.json())
+
+// Middleware to enable CORS
+const allowedOrigin = process.env.CLIENT_ORIGIN || 'http://localhost:5173'
+
+app.use(
+	cors({
+		origin: allowedOrigin,
+	}),
+)
 
 // Test route
 app.get('/', (_req: Request, res: Response) => {

@@ -5,6 +5,7 @@ import { questionsRouter } from './routes/questions.routes'
 import { statsRouter } from './routes/stats.routes'
 import { submissionsRouter } from './routes/submissions.routes'
 import 'dotenv/config'
+import helmet from 'helmet'
 
 const app = express()
 
@@ -12,7 +13,10 @@ const PORT = Number(process.env.PORT) || 3000
 
 // Middleware to parse JSON bodies
 app.use(express.json())
+// Middleware to enable CORS
 app.use(cors())
+// Middleware to set security-related HTTP headers
+app.use(helmet())
 
 // Test route
 app.get('/', (_req: Request, res: Response) => {

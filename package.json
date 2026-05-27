@@ -1,35 +1,41 @@
 {
-  "name": "which-dev-hero-are-you-api",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/server.ts",
-    "start": "node src/server.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/AlexJCodes/which-dev-hero-are-you-api.git"
-  },
-  "keywords": [],
-  "author": "Alex Johansson",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/AlexJCodes/which-dev-hero-are-you-api/issues"
-  },
-  "homepage": "https://github.com/AlexJCodes/which-dev-hero-are-you-api#readme",
-  "dependencies": {
-    "cors": "^2.8.6",
-    "express": "^5.2.1"
-  },
-  "devDependencies": {
-    "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.6",
-    "@types/node": "^25.9.1",
-    "nodemon": "^3.1.14",
-    "ts-node": "^10.9.2",
-    "typescript": "^6.0.3"
-  }
+	"name": "which-dev-hero-are-you-api",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"build": "tsc",
+		"dev": "nodemon src/server.ts",
+		"start": "node src/server.js",
+		"format": "biome format --write .",
+		"lint": "biome lint .",
+		"check": "biome check .",
+		"check:fix": "biome check --write ."
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/AlexJCodes/which-dev-hero-are-you-api.git"
+	},
+	"keywords": [],
+	"author": "Alex Johansson",
+	"license": "ISC",
+	"type": "commonjs",
+	"bugs": {
+		"url": "https://github.com/AlexJCodes/which-dev-hero-are-you-api/issues"
+	},
+	"homepage": "https://github.com/AlexJCodes/which-dev-hero-are-you-api#readme",
+	"dependencies": {
+		"cors": "^2.8.6",
+		"express": "^5.2.1"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.4.15",
+		"@types/cors": "^2.8.19",
+		"@types/express": "^5.0.6",
+		"@types/node": "^25.9.1",
+		"nodemon": "^3.1.14",
+		"ts-node": "^10.9.2",
+		"typescript": "^6.0.3"
+	}
 }

@@ -7,6 +7,7 @@ import { submissionsRouter } from './routes/submissions.routes'
 import 'dotenv/config'
 import helmet from 'helmet'
 import { errorHandler } from './middleware/errorHandler'
+import { notFoundHandler } from './middleware/notFoundHandler'
 
 const app = express()
 
@@ -43,6 +44,9 @@ app.use('/submissions', submissionsRouter)
 
 // Route - stats
 app.use('/stats', statsRouter)
+
+// Middleware to handle 404 Not Found
+app.use(notFoundHandler)
 
 // Error handling middleware
 app.use(errorHandler)

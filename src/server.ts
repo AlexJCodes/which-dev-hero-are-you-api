@@ -4,10 +4,11 @@ import { charactersRouter } from './routes/characters.routes'
 import { questionsRouter } from './routes/questions.routes'
 import { statsRouter } from './routes/stats.routes'
 import { submissionsRouter } from './routes/submissions.routes'
+import 'dotenv/config'
 
 const app = express()
 
-const PORT = 3000
+const PORT = Number(process.env.PORT) || 3000
 
 // Middleware to parse JSON bodies
 app.use(express.json())

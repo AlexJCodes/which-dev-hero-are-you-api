@@ -1,4 +1,4 @@
-import type { Submission, QuizStats } from '../types/quiz.types'
+import type { QuizStats, Submission } from '../types/quiz.types'
 
 // ----------------------------------------------------------- //
 // --------------------- CALCULATE STATS --------------------- //
@@ -8,33 +8,33 @@ import type { Submission, QuizStats } from '../types/quiz.types'
 // TODO: REPLACE WITH SQL QUERY LATER
 
 export function calculateStats(submissions: Submission[]): QuizStats {
-    const resultCounts: Record<string, number> = {}
+	const resultCounts: Record<string, number> = {}
 
-    for (const submission of submissions) {
-        const resultId = submission.resultId
+	for (const submission of submissions) {
+		const resultId = submission.resultId
 
-        if (!resultCounts[resultId]) {
-            resultCounts[resultId] = 0
-        }
+		if (!resultCounts[resultId]) {
+			resultCounts[resultId] = 0
+		}
 
-        resultCounts[resultId]++
-    }
+		resultCounts[resultId]++
+	}
 
-    let mostCommonResult: string | null = null
-    let highestResultCount = 0
+	let mostCommonResult: string | null = null
+	let highestResultCount = 0
 
-    for (const resultId in resultCounts) {
-        const currentResultCount = resultCounts[resultId]
+	for (const resultId in resultCounts) {
+		const currentResultCount = resultCounts[resultId]
 
-        if (currentResultCount > highestResultCount) {
-            highestResultCount = currentResultCount
-            mostCommonResult = resultId
-        }
-    }
+		if (currentResultCount > highestResultCount) {
+			highestResultCount = currentResultCount
+			mostCommonResult = resultId
+		}
+	}
 
-    return {
-        totalSubmissions: submissions.length,
-        resultCounts,
-        mostCommonResult,
-    }
+	return {
+		totalSubmissions: submissions.length,
+		resultCounts,
+		mostCommonResult,
+	}
 }

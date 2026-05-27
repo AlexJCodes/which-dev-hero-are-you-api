@@ -1,6 +1,7 @@
 import express, { type Request, type Response } from 'express'
 
 import { submissions } from '../data/submissions'
+import { createErrorResponse } from '../utils/apiResponse'
 import { calculateResult } from '../utils/calculateResult'
 import { validateAnswers } from '../utils/validateAnswers'
 
@@ -16,7 +17,7 @@ submissionsRouter.get('/', async (_req: Request, res: Response) => {
 	} catch (error) {
 		console.error(error)
 
-		res.status(500).json({ message: 'Error occurred while fetching submissions' })
+		res.status(500).json(createErrorResponse('Error occurred while fetching submissions'))
 	}
 })
 
@@ -30,16 +31,14 @@ submissionsRouter.get('/:id', async (req: Request, res: Response) => {
 		const submission = submissions.find((submission) => submission.id === id)
 
 		if (!submission) {
-			return res.status(404).json({
-				message: `Submission with id ${id} was not found`,
-			})
+			return res.status(404).json(createErrorResponse(`Submission with id ${id} was not found`))
 		}
 
 		res.json(submission)
 	} catch (error) {
 		console.error(error)
 
-		res.status(500).json({ message: 'Error occurred while fetching submission' })
+		res.status(500).json(createErrorResponse('Error occurred while fetching submission'))
 	}
 })
 
@@ -52,36 +51,28 @@ submissionsRouter.post('/', async (req: Request, res: Response) => {
 
 		// Validate username
 		if (!username || typeof username !== 'string') {
-			return res.status(400).json({
-				message: 'Username is required and must be a string',
-			})
+			return res.status(400).json(createErrorResponse('Username is required and must be a string'))
 		}
 
 		// Validate answers type
 		if (!Array.isArray(answers)) {
-			return res.status(400).json({
-				message: 'Answers are required and must be an array',
-			})
+			return res.status(400).json(createErrorResponse('Answers are required and must be an array'))
 		}
 
 		// Validate answers content
 		if (answers.length === 0) {
-			return res.status(400).json({
-				message: 'Answers array cannot be empty',
-			})
+			return res.status(400).json(createErrorResponse('Answers array cannot be empty'))
 		}
 
 		// Validate that all answers match existing character ids
 		if (!validateAnswers(answers)) {
-			return res.status(400).json({
-				message: 'Answers contain invalid character ids',
-			})
+			return res.status(400).json(createErrorResponse('Answers contain invalid character ids'))
 		}
 
 		// Calculate quiz result:
 		const resultId = calculateResult(answers)
 
-		// Create new subbmission:
+		// Create new submission:
 		const newSubmission = {
 			id: crypto.randomUUID(),
 			username,
@@ -98,7 +89,7 @@ submissionsRouter.post('/', async (req: Request, res: Response) => {
 	} catch (error) {
 		console.error(error)
 
-		res.status(500).json({ message: 'Error occurred while creating submission' })
+		res.status(500).json(createErrorResponse('Error occurred while creating submission'))
 	}
 })
 
@@ -114,9 +105,7 @@ submissionsRouter.patch('/:id', async (req: Request, res: Response) => {
 		const submissionIndex = submissions.findIndex((submission) => submission.id === id)
 
 		if (submissionIndex === -1) {
-			return res.status(404).json({
-				message: `Submission with id ${id} was not found`,
-			})
+			return res.status(404).json(createErrorResponse(`Submission with id ${id} was not found`))
 		}
 
 		// Get existing submission:
@@ -124,35 +113,26 @@ submissionsRouter.patch('/:id', async (req: Request, res: Response) => {
 
 		// Validate username only if username was provided
 		if (username !== undefined && typeof username !== 'string') {
-			return res.status(400).json({
-				message: 'Username must be a string',
-			})
+			return res.status(400).json(createErrorResponse('Username must be a string'))
 		}
 
 		// Validate answers only if answers was provided
 		if (answers !== undefined && !Array.isArray(answers)) {
-			return res.status(400).json({
-				message: 'Answers must be an array',
-			})
+			return res.status(400).json(createErrorResponse('Answers must be an array'))
 		}
 
 		// Validate answers content only if answers was provided
 		if (answers !== undefined && answers.length === 0) {
-			return res.status(400).json({
-				message: 'Answers array cannot be empty',
-			})
+			return res.status(400).json(createErrorResponse('Answers array cannot be empty'))
 		}
 
 		// Validate that all provided answers match existing character ids
 		if (answers !== undefined && !validateAnswers(answers)) {
-			return res.status(400).json({
-				message: 'Answers contain invalid character ids',
-			})
+			return res.status(400).json(createErrorResponse('Answers contain invalid character ids'))
 		}
 
-		// Updated submission
-		// If answers and user are provided, recalculate the result:
-		// If answers and user are not provided, keep the existing answers and result.
+		// If new answers are provided, use them.
+		// Otherwise, keep the existing answers.
 		const updatedAnswers = answers ?? existingSubmission.answers
 
 		// If answers are updated, we need to recalculate the result.
@@ -172,7 +152,7 @@ submissionsRouter.patch('/:id', async (req: Request, res: Response) => {
 	} catch (error) {
 		console.error(error)
 
-		res.status(500).json({ message: 'Error occurred while updating submission' })
+		res.status(500).json(createErrorResponse('Error occurred while updating submission'))
 	}
 })
 
@@ -187,9 +167,7 @@ submissionsRouter.delete('/:id', async (req: Request, res: Response) => {
 		const submissionIndex = submissions.findIndex((submission) => submission.id === id)
 
 		if (submissionIndex === -1) {
-			return res.status(404).json({
-				message: `Submission with id ${id} was not found`,
-			})
+			return res.status(404).json(createErrorResponse(`Submission with id ${id} was not found`))
 		}
 
 		// Delete submission from array:
@@ -200,6 +178,6 @@ submissionsRouter.delete('/:id', async (req: Request, res: Response) => {
 	} catch (error) {
 		console.error(error)
 
-		res.status(500).json({ message: 'Error occurred while deleting submission' })
+		res.status(500).json(createErrorResponse('Error occurred while deleting submission'))
 	}
 })

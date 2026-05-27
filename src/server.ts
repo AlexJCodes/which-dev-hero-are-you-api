@@ -6,6 +6,7 @@ import { statsRouter } from './routes/stats.routes'
 import { submissionsRouter } from './routes/submissions.routes'
 import 'dotenv/config'
 import helmet from 'helmet'
+import { errorHandler } from './middleware/errorHandler'
 
 const app = express()
 
@@ -42,6 +43,9 @@ app.use('/submissions', submissionsRouter)
 
 // Route - stats
 app.use('/stats', statsRouter)
+
+// Error handling middleware
+app.use(errorHandler)
 
 // Start the server
 app.listen(PORT, () => {

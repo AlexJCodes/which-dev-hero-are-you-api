@@ -11,4 +11,5 @@ export const env = {
 	dbUser: process.env.DB_USER,
 	dbPassword: process.env.DB_PASSWORD,
 	dbName: process.env.DB_NAME,
+	dbSslCaPath: process.env.DB_SSL_CA_PATH || 'certs/ca.pem',
 }

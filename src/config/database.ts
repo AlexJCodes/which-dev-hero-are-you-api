@@ -1,5 +1,8 @@
+import fs from 'node:fs'
 import mysql from 'mysql2/promise'
 import { env } from './env'
+
+const sslCaCertificate = fs.readFileSync(env.dbSslCaPath, 'utf8')
 
 export const db = mysql.createPool({
 	host: env.dbHost,
@@ -8,9 +11,9 @@ export const db = mysql.createPool({
 	password: env.dbPassword,
 	database: env.dbName,
 
-	// Aiven requires SSL for MySQL connections.
 	ssl: {
-		rejectUnauthorized: false,
+		ca: sslCaCertificate,
+		rejectUnauthorized: true,
 	},
 
 	connectionLimit: 10,

@@ -7,6 +7,7 @@ import { submissionsRouter } from './routes/submissions.routes'
 import 'dotenv/config'
 import helmet from 'helmet'
 import { env } from './config/env'
+import { testDatabaseConnection } from './config/testDatabaseConnection'
 import { errorHandler } from './middleware/errorHandler'
 import { notFoundHandler } from './middleware/notFoundHandler'
 
@@ -51,6 +52,9 @@ app.use(notFoundHandler)
 
 // Error handling middleware
 app.use(errorHandler)
+
+// Test database connection before starting the server
+testDatabaseConnection()
 
 // Start the server
 app.listen(PORT, () => {

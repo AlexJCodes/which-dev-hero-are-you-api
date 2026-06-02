@@ -1,5 +1,5 @@
 import express, { type Request, type Response } from 'express'
-import { characters } from '../data/characters'
+import { getAllCharacters } from '../repositories/charactersRepository'
 import { createErrorResponse } from '../utils/apiResponse'
 
 export const charactersRouter = express.Router()
@@ -10,6 +10,8 @@ export const charactersRouter = express.Router()
 
 charactersRouter.get('/', async (_req: Request, res: Response) => {
 	try {
+		const characters = await getAllCharacters()
+
 		res.json(characters)
 	} catch (error) {
 		console.error(error)

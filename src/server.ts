@@ -1,15 +1,15 @@
+import 'dotenv/config'
 import cors from 'cors'
 import express, { type Request, type Response } from 'express'
-import { charactersRouter } from './routes/characters.routes'
-import { questionsRouter } from './routes/questions.routes'
-import { statsRouter } from './routes/stats.routes'
-import { submissionsRouter } from './routes/submissions.routes'
-import 'dotenv/config'
 import helmet from 'helmet'
 import { env } from './config/env'
 import { testDatabaseConnection } from './config/testDatabaseConnection'
 import { errorHandler } from './middleware/errorHandler'
 import { notFoundHandler } from './middleware/notFoundHandler'
+import { charactersRouter } from './routes/characters.routes'
+import { questionsRouter } from './routes/questions.routes'
+import { statsRouter } from './routes/stats.routes'
+import { submissionsRouter } from './routes/submissions.routes'
 
 const app = express()
 

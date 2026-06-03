@@ -41,6 +41,14 @@ function mapCharacterRowToCharacter(row: CharacterRow): Character {
 }
 
 // ----------------------------------------------------------- //
+// -------------------- DATABASE ROW ID ---------------------- //
+// ----------------------------------------------------------- //
+
+type CharacterIdRow = RowDataPacket & {
+	id: string
+}
+
+// ----------------------------------------------------------- //
 // ------------------- GET ALL CHARACTERS -------------------- //
 // ----------------------------------------------------------- //
 
@@ -64,4 +72,15 @@ export async function getAllCharacters(): Promise<Character[]> {
 	)
 
 	return rows.map(mapCharacterRowToCharacter)
+}
+
+export async function getCharacterIds(): Promise<string[]> {
+	const [rows] = await db.query<CharacterIdRow[]>(
+		`
+		SELECT id
+		FROM characters
+		`,
+	)
+
+	return rows.map((row) => row.id)
 }

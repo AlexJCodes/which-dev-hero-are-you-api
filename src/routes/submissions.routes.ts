@@ -72,7 +72,7 @@ submissionsRouter.post('/', async (req: Request, res: Response) => {
 		}
 
 		// Validate that all answers match existing character ids
-		if (!validateAnswers(answers)) {
+		if (!(await validateAnswers(answers))) {
 			return res.status(400).json(createErrorResponse('Answers contain invalid character ids'))
 		}
 
@@ -131,7 +131,7 @@ submissionsRouter.patch('/:id', async (req: Request<{ id: string }>, res: Respon
 		}
 
 		// Validate that all provided answers match existing character ids
-		if (answers !== undefined && !validateAnswers(answers)) {
+		if (answers !== undefined && !(await validateAnswers(answers))) {
 			return res.status(400).json(createErrorResponse('Answers contain invalid character ids'))
 		}
 

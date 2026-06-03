@@ -1,13 +1,13 @@
-import { characters } from '../data/characters'
+import { getCharacterIds } from '../repositories/charactersRepository'
 
 // ----------------------------------------------------------- //
 // -------------------- VALIDATE ANSWERS --------------------- //
 // ----------------------------------------------------------- //
-
-// Each answer must be a valid character name
-
-export function validateAnswers(answers: string[]): boolean {
-	const validCharacterIds = characters.map((character) => character.id)
+// This function checks if the answers array contains valid data.
+//
+// Each answer must match an existing character id from MySQL.
+export async function validateAnswers(answers: string[]): Promise<boolean> {
+	const validCharacterIds = await getCharacterIds()
 
 	return answers.every((answer) => validCharacterIds.includes(answer))
 }

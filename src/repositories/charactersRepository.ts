@@ -74,6 +74,8 @@ export async function getAllCharacters(): Promise<Character[]> {
 	return rows.map(mapCharacterRowToCharacter)
 }
 
+// Validation function to check if the provided character IDs are valid.
+
 export async function getCharacterIds(): Promise<string[]> {
 	const [rows] = await db.query<CharacterIdRow[]>(
 		`
@@ -83,4 +85,38 @@ export async function getCharacterIds(): Promise<string[]> {
 	)
 
 	return rows.map((row) => row.id)
+}
+
+// ----------------------------------------------------------- //
+// ------------------- GET CHARACTER BY ID ------------------- //
+// ----------------------------------------------------------- //
+// Fetches one character by id.
+
+// The id comes from req.params, so we use a placeholder
+// to protect against SQL injection.
+export async function getCharacterById(id: string): Promise<Character | undefined> {
+	const [rows] = await db.query<CharacterRow[]>(
+		`
+		SELECT
+			id,
+			name,
+			developer_type,
+			description,
+			strengths,
+			weaknesses,
+			catchphrase,
+			image_url
+		FROM characters
+		WHERE id = ?
+		`,
+		[id],
+	)
+
+	const characterRow = rows[0]
+
+	if (!characterRow) {
+		return undefined
+	}
+
+	return mapCharacterRowToCharacter(characterRow)
 }

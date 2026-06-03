@@ -88,7 +88,7 @@ submissionsRouter.post('/', async (req: Request, res: Response) => {
 			createdAt: new Date().toISOString(),
 		}
 
-		// Save submission in memory-array
+		// Save submission in repository:
 		const createdSubmission = await createSubmission(newSubmission)
 
 		// Return submission

@@ -79,3 +79,53 @@ function getOptionsForQuestion(
 			}
 		})
 }
+
+// ----------------------------------------------------------- //
+// -------------------- GET QUESTION BY ID ------------------- //
+// ----------------------------------------------------------- //
+
+export async function getQuestionById(id: string): Promise<Question | undefined> {
+	const [questionRows] = await db.query<QuestionRow[]>(
+		`
+		SELECT
+			id,
+			text,
+			sort_order
+		FROM questions
+		WHERE id = ?
+		`,
+		[id],
+	)
+
+	const questionRow = questionRows[0]
+
+	if (!questionRow) {
+		return undefined
+	}
+
+	const [answerOptionRows] = await db.query<AnswerOptionRow[]>(
+		`
+		SELECT
+			id,
+			question_id,
+			text,
+			character_id
+		FROM answer_options
+		WHERE question_id = ?
+		ORDER BY id ASC
+		`,
+		[id],
+	)
+
+	return {
+		id: questionRow.id,
+		text: questionRow.text,
+		options: answerOptionRows.map((answerOptionRow) => {
+			return {
+				id: answerOptionRow.id,
+				text: answerOptionRow.text,
+				characterId: answerOptionRow.character_id,
+			}
+		}),
+	}
+}

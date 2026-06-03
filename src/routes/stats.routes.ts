@@ -1,15 +1,13 @@
 import express, { type Request, type Response } from 'express'
-import { submissions } from '../data/submissions'
-import { createErrorResponse } from '../utils/apiResponse'
-import { calculateStats } from '../utils/calculateStats'
 
-// Stat-related routes
+import { getQuizStats } from '../repositories/statsRepository'
+import { createErrorResponse } from '../utils/apiResponse'
+
 export const statsRouter = express.Router()
 
-// GET /stats
 statsRouter.get('/', async (_req: Request, res: Response) => {
 	try {
-		const quizStats = calculateStats(submissions)
+		const quizStats = await getQuizStats()
 
 		res.json(quizStats)
 	} catch (error) {

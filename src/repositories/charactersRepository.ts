@@ -52,11 +52,10 @@ type CharacterIdRow = RowDataPacket & {
 // ------------------- GET ALL CHARACTERS -------------------- //
 // ----------------------------------------------------------- //
 
-// This function fetches all characters from the MySQL database.
+export async function getAllCharacters(options: GetCharactersOptions = {}): Promise<Character[]> {
+	const queryValues: string[] = []
 
-export async function getAllCharacters(): Promise<Character[]> {
-	const [rows] = await db.query<CharacterRow[]>(
-		`
+	let sql = `
 		SELECT
 			id,
 			name,
@@ -67,9 +66,29 @@ export async function getAllCharacters(): Promise<Character[]> {
 			catchphrase,
 			image_url
 		FROM characters
-		ORDER BY name ASC
-		`,
-	)
+	`
+
+	if (options.search) {
+		sql += `
+			WHERE
+				name LIKE ?
+				OR developer_type LIKE ?
+				OR description LIKE ?
+		`
+
+		const searchPattern = `%${options.search}%`
+
+		queryValues.push(searchPattern, searchPattern, searchPattern)
+	}
+
+	const sortColumn = options.sort === 'name' ? 'name' : 'name'
+	const sortOrder = options.order === 'desc' ? 'DESC' : 'ASC'
+
+	sql += `
+		ORDER BY ${sortColumn} ${sortOrder}
+	`
+
+	const [rows] = await db.query<CharacterRow[]>(sql, queryValues)
 
 	return rows.map(mapCharacterRowToCharacter)
 }
@@ -119,4 +138,14 @@ export async function getCharacterById(id: string): Promise<Character | undefine
 	}
 
 	return mapCharacterRowToCharacter(characterRow)
+}
+
+// ----------------------------------------------------------- //
+// ------------------- SEARCH AND FILTER --------------------- //
+// ----------------------------------------------------------- //
+
+type GetCharactersOptions = {
+	search?: string
+	sort?: 'name'
+	order?: 'asc' | 'desc'
 }

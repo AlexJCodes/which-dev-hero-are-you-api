@@ -8,9 +8,19 @@ export const charactersRouter = express.Router()
 // ------------------------ GET ------------------------------ //
 // ----------------------------------------------------------- //
 
-charactersRouter.get('/', async (_req: Request, res: Response) => {
+charactersRouter.get('/', async (req: Request, res: Response) => {
 	try {
-		const characters = await getAllCharacters()
+		const search = typeof req.query.search === 'string' ? req.query.search : undefined
+
+		const sort = req.query.sort === 'name' ? 'name' : undefined
+
+		const order = req.query.order === 'desc' ? 'desc' : 'asc'
+
+		const characters = await getAllCharacters({
+			search,
+			sort,
+			order,
+		})
 
 		res.json(characters)
 	} catch (error) {

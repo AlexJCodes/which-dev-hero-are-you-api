@@ -1,5 +1,8 @@
 import express, { type Request, type Response } from 'express'
-import { getAllCharacters, getCharacterById } from '../repositories/charactersRepository'
+import {
+	getAllCharacters,
+	getCharacterWithCommentsById,
+} from '../repositories/charactersRepository'
 import { createErrorResponse } from '../utils/apiResponse'
 
 export const charactersRouter = express.Router()
@@ -38,7 +41,7 @@ charactersRouter.get('/:id', async (req: Request<{ id: string }>, res: Response)
 	try {
 		const { id } = req.params
 
-		const character = await getCharacterById(id)
+		const character = await getCharacterWithCommentsById(id)
 
 		if (!character) {
 			return res.status(404).json(createErrorResponse(`Character with id ${id} was not found`))

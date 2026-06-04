@@ -7,8 +7,10 @@ import { testDatabaseConnection } from './config/testDatabaseConnection'
 import { errorHandler } from './middleware/errorHandler'
 import { notFoundHandler } from './middleware/notFoundHandler'
 import { charactersRouter } from './routes/characters.routes'
+import { commentsRouter } from './routes/comments.routes'
 import { questionsRouter } from './routes/questions.routes'
 import { statsRouter } from './routes/stats.routes'
+
 import { submissionsRouter } from './routes/submissions.routes'
 
 const app = express()
@@ -46,6 +48,9 @@ app.use('/submissions', submissionsRouter)
 
 // Route - stats
 app.use('/stats', statsRouter)
+
+// Route - comments
+app.use(commentsRouter)
 
 // Middleware to handle 404 Not Found
 app.use(notFoundHandler)

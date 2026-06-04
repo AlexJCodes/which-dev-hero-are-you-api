@@ -2,6 +2,7 @@ import type { RowDataPacket } from 'mysql2'
 
 import { db } from '../config/database'
 import type { Character } from '../types/quiz.types'
+import type { CharacterComment } from './commentsRepository'
 
 // ----------------------------------------------------------- //
 // ------------------ DATABASE ROW TYPE ---------------------- //
@@ -148,4 +149,99 @@ type GetCharactersOptions = {
 	search?: string
 	sort?: 'name'
 	order?: 'asc' | 'desc'
+}
+
+// ----------------------------------------------------------- //
+// ---------------- CHARACTER WITH COMMENTS ------------------ //
+// ----------------------------------------------------------- //
+
+export type CharacterWithComments = Character & {
+	comments: CharacterComment[]
+}
+
+type CharacterWithCommentRow = RowDataPacket & {
+	id: string
+	name: string
+	developer_type: string
+	description: string
+	strengths: string[] | string
+	weaknesses: string[] | string
+	catchphrase: string
+	image_url: string
+	comment_id: number | null
+	comment_character_id: string | null
+	comment_content: string | null
+	comment_author: string | null
+	comment_created_at: Date | null
+}
+
+// ----------------------------------------------------------- //
+// ------------- GET CHARACTER WITH COMMENTS BY ID ----------- //
+// ----------------------------------------------------------- //
+
+// LEFT JOIN is used so the character is returned even if it
+// has no comments.
+export async function getCharacterWithCommentsById(
+	id: string,
+): Promise<CharacterWithComments | undefined> {
+	const [rows] = await db.query<CharacterWithCommentRow[]>(
+		`
+		SELECT
+			characters.id,
+			characters.name,
+			characters.developer_type,
+			characters.description,
+			characters.strengths,
+			characters.weaknesses,
+			characters.catchphrase,
+			characters.image_url,
+
+			character_comments.id AS comment_id,
+			character_comments.character_id AS comment_character_id,
+			character_comments.content AS comment_content,
+			character_comments.author AS comment_author,
+			character_comments.created_at AS comment_created_at
+		FROM characters
+		LEFT JOIN character_comments
+			ON characters.id = character_comments.character_id
+		WHERE characters.id = ?
+		ORDER BY character_comments.created_at DESC
+		`,
+		[id],
+	)
+
+	const firstRow = rows[0]
+
+	if (!firstRow) {
+		return undefined
+	}
+
+	const character = mapCharacterRowToCharacter(firstRow)
+
+	const comments: CharacterComment[] = rows.flatMap((row) => {
+		if (
+			row.comment_id === null ||
+			row.comment_character_id === null ||
+			row.comment_content === null ||
+			row.comment_author === null ||
+			row.comment_created_at === null
+		) {
+			return []
+		}
+
+		return [
+			{
+				id: row.comment_id,
+				characterId: row.comment_character_id,
+				content: row.comment_content,
+				author: row.comment_author,
+				createdAt: row.comment_created_at.toISOString(),
+			},
+		]
+	})
+
+	return {
+		...character,
+		comments,
+	}
 }

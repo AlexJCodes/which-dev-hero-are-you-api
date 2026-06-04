@@ -45,3 +45,13 @@ CREATE TABLE submissions (
     FOREIGN KEY (result_id) REFERENCES characters(id)
 );
 
+CREATE TABLE character_comments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    character_id VARCHAR(50) NOT NULL,
+    content TEXT NOT NULL,
+    author VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (character_id) REFERENCES characters(id)
+);
+

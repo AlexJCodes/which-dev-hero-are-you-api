@@ -23,6 +23,8 @@ The project started as a school API exercise, but has been developed further int
 - Basic security headers with Helmet
 - CORS configuration via environment variables
 - Request validation for submissions and comments
+- Health check endpoint for API and database status
+
 
 ## Tech Stack
 
@@ -64,12 +66,14 @@ src/
 ├── repositories/
 │   ├── charactersRepository.ts
 │   ├── commentsRepository.ts
+|   ├── healthRepository.ts
 │   ├── questionsRepository.ts
 │   ├── statsRepository.ts
 │   └── submissionsRepository.ts
 ├── routes/
 │   ├── characters.routes.ts
 │   ├── comments.routes.ts
+│   ├── health.routes.ts
 │   ├── questions.routes.ts
 │   ├── stats.routes.ts
 │   └── submissions.routes.ts
@@ -232,9 +236,37 @@ Compiles TypeScript.
 GET /
 ```
 
+Returns a welcome message.
+
 ---
 
-Returns a welcome message.
+### Health
+
+```http
+GET /health
+```
+
+Returns API and database health status.
+
+**Example response when everything is working:**
+
+```json
+{
+	"status": "ok",
+	"database": "connected"
+}
+```
+
+**Example response when the API is running but the database is unavailable:**
+
+```json
+{
+	"status": "degraded",
+	"database": "disconnected"
+}
+```
+
+---
 
 ### Characters
 
@@ -409,6 +441,7 @@ Which would be in a risk of SQL injections.
 - Character comments
 - SQL joins for related data
 - Search and sort for characters
+- Health check endpoint for API and database status
 
 **Next Steps**:
 
@@ -416,7 +449,6 @@ Which would be in a risk of SQL injections.
 - Add quiz UI with radio buttons
 - Display character result cards
 - Render character comments in the frontend
-- Add a complete health check
 - Add README screenshots
 - Add deployment instructions
 - Add automated tests

@@ -58,7 +58,6 @@ src/
 ├── config/
 │   ├── database.ts
 │   ├── env.ts
-│   └── testDatabaseConnection.ts
 ├── middleware/
 │   ├── errorHandler.ts
 │   └── notFoundHandler.ts

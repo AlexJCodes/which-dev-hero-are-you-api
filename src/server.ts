@@ -3,11 +3,11 @@ import cors from 'cors'
 import express, { type Request, type Response } from 'express'
 import helmet from 'helmet'
 import { env } from './config/env'
-import { testDatabaseConnection } from './config/testDatabaseConnection'
 import { errorHandler } from './middleware/errorHandler'
 import { notFoundHandler } from './middleware/notFoundHandler'
 import { charactersRouter } from './routes/characters.routes'
 import { commentsRouter } from './routes/comments.routes'
+import { healthRouter } from './routes/health.routes'
 import { questionsRouter } from './routes/questions.routes'
 import { statsRouter } from './routes/stats.routes'
 
@@ -37,6 +37,12 @@ app.get('/', (_req: Request, res: Response) => {
 	res.json({ message: 'Welcome to the Which Dev Hero Are You API!' })
 })
 
+// Route - health
+app.use('/health', healthRouter)
+
+// Route - questions
+app.use('/questions', questionsRouter)
+
 // Route - questions
 app.use('/questions', questionsRouter)
 
@@ -57,9 +63,6 @@ app.use(notFoundHandler)
 
 // Error handling middleware
 app.use(errorHandler)
-
-// Test database connection before starting the server
-testDatabaseConnection()
 
 // Start the server
 app.listen(PORT, () => {

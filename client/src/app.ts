@@ -1,5 +1,6 @@
 import { createExplorePage } from "./pages/explorePage"
 import { createLandingPage } from "./pages/landingPage"
+import { createQuizPage } from "./pages/quizPage"
 
 type Screen = "landing" | "quiz" | "result" | "explore"
 
@@ -44,11 +45,14 @@ export function renderApp(app: HTMLDivElement) {
 		}
 
 		if (currentScreen === "quiz") {
-			app.innerHTML = `
-				<main class="page">
-					<h1>Quiz coming next</h1>
-				</main>
-			`
+			const quizPage = createQuizPage({
+				onQuizComplete: () => {
+					currentScreen = "result"
+					renderCurrentScreen()
+				},
+			})
+
+			app.append(quizPage)
 
 			return
 		}

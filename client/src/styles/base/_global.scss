@@ -1,0 +1,32 @@
+html,
+body {
+	min-height: 100%;
+	background: var(--color-background);
+	color: var(--color-text-primary);
+}
+
+body {
+	font-family: var(--font-body);
+}
+
+button,
+input,
+textarea,
+select {
+	font: inherit;
+}
+
+button {
+	cursor: pointer;
+}
+
+img,
+svg {
+	display: block;
+	max-width: 100%;
+}
+
+.page {
+	width: min(var(--page-width), calc(100% - (var(--page-padding) * 2)));
+	margin-inline: auto;
+}

@@ -1,3 +1,4 @@
+import { createExplorePage } from "./pages/explorePage"
 import { createLandingPage } from "./pages/landingPage"
 
 type Screen = "landing" | "quiz" | "result" | "explore"
@@ -25,20 +26,27 @@ export function renderApp(app: HTMLDivElement) {
 			return
 		}
 
-		if (currentScreen === "quiz") {
-			app.innerHTML = `
-				<main class="page">
-					<h1>Quiz coming next</h1>
-				</main>
-			`
+		if (currentScreen === "explore") {
+			const explorePage = createExplorePage({
+				onBack: () => {
+					currentScreen = "landing"
+					renderCurrentScreen()
+				},
+				onStartQuiz: () => {
+					currentScreen = "quiz"
+					renderCurrentScreen()
+				},
+			})
+
+			app.append(explorePage)
 
 			return
 		}
 
-		if (currentScreen === "explore") {
+		if (currentScreen === "quiz") {
 			app.innerHTML = `
 				<main class="page">
-					<h1>Explore heroes coming next</h1>
+					<h1>Quiz coming next</h1>
 				</main>
 			`
 

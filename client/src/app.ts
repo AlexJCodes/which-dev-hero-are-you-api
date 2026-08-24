@@ -21,6 +21,8 @@ export function renderApp(app: HTMLDivElement) {
 			})
 
 			app.append(landingPage)
+
+			return
 		}
 
 		if (currentScreen === "quiz") {
@@ -29,6 +31,8 @@ export function renderApp(app: HTMLDivElement) {
 					<h1>Quiz coming next</h1>
 				</main>
 			`
+
+			return
 		}
 
 		if (currentScreen === "explore") {
@@ -37,6 +41,8 @@ export function renderApp(app: HTMLDivElement) {
 					<h1>Explore heroes coming next</h1>
 				</main>
 			`
+
+			return
 		}
 
 		if (currentScreen === "result") {

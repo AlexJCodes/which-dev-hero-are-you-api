@@ -1,51 +1,22 @@
+import { createBackgroundBlobs } from "../components/backgroundBlobs"
+import { createHeroTeaserCard } from "../components/heroTeaserCard"
+import { floatingCodeSymbols, landingTeaserHeroes } from "../data/landingContent"
+import { createFloatingCodeSymbol } from "../components/floatingCodeSymbol"
+
 type LandingPageOptions = {
 	onStartQuiz: () => void
 	onExploreHeroes: () => void
 }
 
-const floatingSymbols = [
-	{ text: "{...}", className: "landing-symbol landing-symbol--one" },
-	{ text: "</>", className: "landing-symbol landing-symbol--two" },
-	{ text: "// fix later", className: "landing-symbol landing-symbol--three" },
-	{ text: "git push -f", className: "landing-symbol landing-symbol--four" },
-	{ text: "O(n²)", className: "landing-symbol landing-symbol--five" },
-	{ text: "npm i", className: "landing-symbol landing-symbol--six" },
-	{ text: "async/await", className: "landing-symbol landing-symbol--seven" },
-]
-
-const teaserCards = [
-	{
-		title: "Tony Stark",
-		label: "AI",
-		text: "The AI-Augmented Engineer",
-		className: "landing-teaser-card landing-teaser-card--cyan",
-	},
-	{
-		title: "Yoda",
-		label: "REF",
-		text: "The Wise Refactor Master",
-		className: "landing-teaser-card landing-teaser-card--lime",
-	},
-	{
-		title: "Batman",
-		label: "ARCH",
-		text: "The Night Shift Architect",
-		className: "landing-teaser-card landing-teaser-card--purple",
-	},
-]
-
 export function createLandingPage(options: LandingPageOptions): HTMLElement {
 	const page = document.createElement("main")
+
 	page.className = "landing-page"
 
-	page.innerHTML = `
-		<div class="landing-bg" aria-hidden="true">
-			<div class="landing-bg__blob landing-bg__blob--cyan"></div>
-			<div class="landing-bg__blob landing-bg__blob--purple"></div>
-			<div class="landing-bg__blob landing-bg__blob--pink"></div>
-			<div class="landing-bg__grid"></div>
-		</div>
+	page.append(createBackgroundBlobs())
 
+	const content = document.createElement("div")
+	content.innerHTML = `
 		<nav class="landing-nav" aria-label="Main navigation">
 			<a class="landing-nav__brand" href="#">
 				<span class="landing-nav__mark">dev</span>
@@ -80,6 +51,8 @@ export function createLandingPage(options: LandingPageOptions): HTMLElement {
 		</section>
 	`
 
+	page.append(...Array.from(content.children))
+
 	const startButton = page.querySelector<HTMLButtonElement>('[data-action="start"]')
 	const exploreButton = page.querySelector<HTMLButtonElement>(
 		'[data-action="explore"]',
@@ -90,32 +63,12 @@ export function createLandingPage(options: LandingPageOptions): HTMLElement {
 		throw new Error("Landing page elements were not found.")
 	}
 
-	for (const symbol of floatingSymbols) {
-		const element = document.createElement("span")
-		element.className = symbol.className
-		element.textContent = symbol.text
-
-		page.append(element)
+	for (const symbol of floatingCodeSymbols) {
+		page.append(createFloatingCodeSymbol(symbol))
 	}
 
-	for (const card of teaserCards) {
-		const article = document.createElement("article")
-		article.className = card.className
-
-		const label = document.createElement("p")
-		label.className = "landing-teaser-card__label"
-		label.textContent = card.label
-
-		const title = document.createElement("h2")
-		title.className = "landing-teaser-card__title"
-		title.textContent = card.title
-
-		const text = document.createElement("p")
-		text.className = "landing-teaser-card__text"
-		text.textContent = card.text
-
-		article.append(label, title, text)
-		teasers.append(article)
+	for (const hero of landingTeaserHeroes) {
+		teasers.append(createHeroTeaserCard(hero))
 	}
 
 	startButton.addEventListener("click", options.onStartQuiz)

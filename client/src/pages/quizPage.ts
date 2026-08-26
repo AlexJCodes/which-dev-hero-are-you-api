@@ -4,7 +4,7 @@ import { createQuizAnswerCard } from "../components/quizAnswerCard"
 import type { AnswerOption, Question } from "../types/question.types"
 
 type QuizPageOptions = {
-	onQuizComplete: () => void
+	onQuizComplete: (answers: string[]) => void
 }
 
 const answerLetters = ["A", "B", "C", "D", "E", "F"]
@@ -39,7 +39,7 @@ async function renderQuiz(page: HTMLElement, options: QuizPageOptions) {
 		}
 
 		let currentQuestionIndex = 0
-		const selectedAnswers: AnswerOption[] = []
+		const selectedAnswers: string[] = []
 
 		function renderCurrentQuestion() {
 			const currentQuestion = questions[currentQuestionIndex]
@@ -64,7 +64,7 @@ async function renderQuiz(page: HTMLElement, options: QuizPageOptions) {
 							return
 						}
 
-						selectedAnswers[currentQuestionIndex] = selectedAnswer
+						selectedAnswers[currentQuestionIndex] = selectedAnswer.characterId
 
 						if (currentQuestionIndex < questions.length - 1) {
 							currentQuestionIndex++
@@ -72,7 +72,7 @@ async function renderQuiz(page: HTMLElement, options: QuizPageOptions) {
 							return
 						}
 
-						options.onQuizComplete()
+						options.onQuizComplete(selectedAnswers)
 					},
 				}),
 			)
@@ -93,7 +93,7 @@ async function renderQuiz(page: HTMLElement, options: QuizPageOptions) {
 								return
 							}
 
-							selectedAnswers[currentQuestionIndex] = selectedAnswer
+							selectedAnswers[currentQuestionIndex] = selectedAnswer.characterId
 
 							if (currentQuestionIndex < questions.length - 1) {
 								currentQuestionIndex++
@@ -101,7 +101,7 @@ async function renderQuiz(page: HTMLElement, options: QuizPageOptions) {
 								return
 							}
 
-							options.onQuizComplete()
+							options.onQuizComplete(selectedAnswers)
 						},
 					}),
 				)

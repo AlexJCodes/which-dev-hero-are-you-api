@@ -1,10 +1,14 @@
+import { createSubmission } from "./api/submissionsApi"
 import { createExplorePage } from "./pages/explorePage"
 import { createLandingPage } from "./pages/landingPage"
 import { createQuizPage } from "./pages/quizPage"
+import { createResultPage } from "./pages/resultPage"
+import type { Submission } from "./types/submission.types"
 
 type Screen = "landing" | "quiz" | "result" | "explore"
 
 let currentScreen: Screen = "landing"
+let latestSubmission: Submission | null = null
 
 export function renderApp(app: HTMLDivElement) {
 	function renderCurrentScreen() {
@@ -46,9 +50,26 @@ export function renderApp(app: HTMLDivElement) {
 
 		if (currentScreen === "quiz") {
 			const quizPage = createQuizPage({
-				onQuizComplete: () => {
-					currentScreen = "result"
-					renderCurrentScreen()
+				onQuizComplete: async (answers) => {
+					try {
+						const submission = await createSubmission({
+							username: "Anonymous Dev",
+							answers,
+						})
+
+						latestSubmission = submission
+						currentScreen = "result"
+						renderCurrentScreen()
+					} catch (error) {
+						console.error(error)
+
+						app.innerHTML = `
+							<main class="page">
+								<h1>Could not submit quiz</h1>
+								<p>Please make sure the API is running.</p>
+							</main>
+						`
+					}
 				},
 			})
 
@@ -58,11 +79,28 @@ export function renderApp(app: HTMLDivElement) {
 		}
 
 		if (currentScreen === "result") {
-			app.innerHTML = `
-				<main class="page">
-					<h1>Result coming next</h1>
-				</main>
-			`
+			if (!latestSubmission) {
+				currentScreen = "landing"
+				renderCurrentScreen()
+				return
+			}
+
+			const resultPage = createResultPage({
+				submission: latestSubmission,
+				onRetakeQuiz: () => {
+					latestSubmission = null
+					currentScreen = "quiz"
+					renderCurrentScreen()
+				},
+				onExploreHeroes: () => {
+					currentScreen = "explore"
+					renderCurrentScreen()
+				},
+			})
+
+			app.append(resultPage)
+
+			return
 		}
 	}
 

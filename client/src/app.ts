@@ -66,12 +66,19 @@ export function renderApp(app: HTMLDivElement) {
 						console.error(error)
 
 						app.innerHTML = `
-							<main class="page">
-								<h1>Could not submit quiz</h1>
-								<p>Please make sure the API is running.</p>
-							</main>
-						`
+					<main class="page">
+						<h1>Could not submit quiz</h1>
+						<p>Please make sure the API is running.</p>
+					</main>
+				`
 					}
+				},
+
+				onExitQuiz: () => {
+					latestSubmission = null
+					playerName = "Anonymous Dev"
+					currentScreen = "landing"
+					renderCurrentScreen()
 				},
 			})
 

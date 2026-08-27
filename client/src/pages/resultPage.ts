@@ -69,7 +69,9 @@ async function renderResult(
 		const presentation = heroPresentation[resultCharacter.id]
 
 		page.classList.add(`result-page--${presentation?.variant ?? "cyan"}`)
-		resultContent.replaceChildren(createResultContent(resultCharacter, submission))
+		resultContent.replaceChildren(
+			createResultContent(resultCharacter, submission),
+		)
 	} catch (error) {
 		console.error(error)
 
@@ -144,7 +146,14 @@ function createResultContent(
 		createTraitList("Watch out for", character.weaknesses),
 	)
 
-	content.append(eyebrow, title, developerType, description, catchphrase, traits)
+	content.append(
+		eyebrow,
+		title,
+		developerType,
+		description,
+		catchphrase,
+		traits,
+	)
 	wrapper.append(visual, content)
 
 	return wrapper

@@ -1,0 +1,22 @@
+{
+  "name": "client",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "check": "tsc --noEmit",
+    "format": "biome format --write \"src/**/*.ts\"",
+    "format:check": "biome format \"src/**/*.ts\"",
+    "lint": "biome lint \"src/**/*.ts\"",
+    "verify": "npm run check && npm run lint && npm run build"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.10",
+    "sass": "^1.103.0",
+    "typescript": "~6.0.2",
+    "vite": "^8.2.0"
+  }
+}

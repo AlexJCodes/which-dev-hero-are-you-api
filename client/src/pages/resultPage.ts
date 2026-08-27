@@ -69,7 +69,7 @@ async function renderResult(
 		const presentation = heroPresentation[resultCharacter.id]
 
 		page.classList.add(`result-page--${presentation?.variant ?? "cyan"}`)
-		resultContent.replaceChildren(createResultContent(resultCharacter))
+		resultContent.replaceChildren(createResultContent(resultCharacter, submission))
 	} catch (error) {
 		console.error(error)
 
@@ -91,7 +91,10 @@ async function renderResult(
 	}
 }
 
-function createResultContent(character: Character): HTMLElement {
+function createResultContent(
+	character: Character,
+	submission: Submission,
+): HTMLElement {
 	const presentation = heroPresentation[character.id]
 
 	const wrapper = document.createElement("div")
@@ -115,7 +118,7 @@ function createResultContent(character: Character): HTMLElement {
 
 	const eyebrow = document.createElement("p")
 	eyebrow.className = "result-card__eyebrow"
-	eyebrow.textContent = "Your dev hero is"
+	eyebrow.textContent = `${submission.username}, your dev hero is`
 
 	const title = document.createElement("h1")
 	title.className = "result-card__title"

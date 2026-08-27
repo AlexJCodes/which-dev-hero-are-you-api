@@ -9,6 +9,7 @@ type Screen = "landing" | "quiz" | "result" | "explore"
 
 let currentScreen: Screen = "landing"
 let latestSubmission: Submission | null = null
+let playerName = "Anonymous Dev"
 
 export function renderApp(app: HTMLDivElement) {
 	function renderCurrentScreen() {
@@ -16,7 +17,8 @@ export function renderApp(app: HTMLDivElement) {
 
 		if (currentScreen === "landing") {
 			const landingPage = createLandingPage({
-				onStartQuiz: () => {
+				onStartQuiz: (username) => {
+					playerName = username
 					currentScreen = "quiz"
 					renderCurrentScreen()
 				},
@@ -53,7 +55,7 @@ export function renderApp(app: HTMLDivElement) {
 				onQuizComplete: async (answers) => {
 					try {
 						const submission = await createSubmission({
-							username: "Anonymous Dev",
+							username: playerName,
 							answers,
 						})
 

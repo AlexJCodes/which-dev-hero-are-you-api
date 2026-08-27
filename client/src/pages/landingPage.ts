@@ -1,10 +1,10 @@
 import { createBackgroundBlobs } from "../components/backgroundBlobs"
+import { createFloatingCodeSymbol } from "../components/floatingCodeSymbol"
 import { createHeroTeaserCard } from "../components/heroTeaserCard"
 import { floatingCodeSymbols, landingTeaserHeroes } from "../data/landingContent"
-import { createFloatingCodeSymbol } from "../components/floatingCodeSymbol"
 
 type LandingPageOptions = {
-	onStartQuiz: () => void
+	onStartQuiz: (username: string) => void
 	onExploreHeroes: () => void
 }
 
@@ -41,6 +41,19 @@ export function createLandingPage(options: LandingPageOptions): HTMLElement {
 				Find out what kind of developer chaos you bring to the team.
 			</p>
 
+			<label class="landing-hero__name-label" for="username">
+				What should we call you?
+			</label>
+
+			<input
+				class="landing-hero__name-input"
+				id="username"
+				type="text"
+				name="username"
+				placeholder="Anonymous Dev"
+				maxlength="30"
+			/>
+
 			<button class="landing-hero__button" type="button" data-action="start">
 				Start Quiz
 				<span aria-hidden="true">→</span>
@@ -57,9 +70,10 @@ export function createLandingPage(options: LandingPageOptions): HTMLElement {
 	const exploreButton = page.querySelector<HTMLButtonElement>(
 		'[data-action="explore"]',
 	)
+	const usernameInput = page.querySelector<HTMLInputElement>("#username")
 	const teasers = page.querySelector<HTMLDivElement>(".landing-teasers")
 
-	if (!startButton || !exploreButton || !teasers) {
+	if (!startButton || !exploreButton || !usernameInput || !teasers) {
 		throw new Error("Landing page elements were not found.")
 	}
 
@@ -71,7 +85,12 @@ export function createLandingPage(options: LandingPageOptions): HTMLElement {
 		teasers.append(createHeroTeaserCard(hero))
 	}
 
-	startButton.addEventListener("click", options.onStartQuiz)
+	startButton.addEventListener("click", () => {
+		const username = usernameInput.value.trim() || "Anonymous Dev"
+
+		options.onStartQuiz(username)
+	})
+
 	exploreButton.addEventListener("click", options.onExploreHeroes)
 
 	return page

@@ -81,6 +81,32 @@
 			0 0 3rem rgb(255 255 255 / 0.06);
 	}
 
+	&__copy-button {
+	margin-top: 1rem;
+	padding: 0.8rem 1.1rem;
+	border: 1px solid rgb(255 255 255 / 0.14);
+	border-radius: var(--radius-pill);
+	background: rgb(255 255 255 / 0.08);
+	color: var(--color-text-primary);
+	font: inherit;
+	font-weight: 700;
+	cursor: pointer;
+	transition:
+		background 150ms ease,
+		border-color 150ms ease,
+		transform 150ms ease;
+
+	&:hover {
+		border-color: rgb(255 255 255 / 0.24);
+		background: rgb(255 255 255 / 0.12);
+		transform: translateY(-1px);
+	}
+
+	&:active {
+		transform: translateY(0);
+	}
+}
+
 	&__main {
 		display: flex;
 		flex-direction: column;

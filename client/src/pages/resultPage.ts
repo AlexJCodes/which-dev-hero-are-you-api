@@ -5,6 +5,7 @@ import type { Submission } from "../types/submission.types"
 
 type ResultPageOptions = {
 	submission: Submission
+	resultUrl: string
 	onRetakeQuiz: () => void
 	onExploreHeroes: () => void
 }
@@ -46,7 +47,7 @@ export function createResultPage(options: ResultPageOptions): HTMLElement {
 	retakeButton.addEventListener("click", options.onRetakeQuiz)
 	exploreButton.addEventListener("click", options.onExploreHeroes)
 
-	renderResult(page, resultContent, options.submission)
+	renderResult(page, resultContent, options.submission, options.resultUrl)
 
 	return page
 }
@@ -55,6 +56,7 @@ async function renderResult(
 	page: HTMLElement,
 	resultContent: HTMLElement,
 	submission: Submission,
+	resultUrl: string,
 ) {
 	try {
 		const characters = await getCharacters()
@@ -70,7 +72,7 @@ async function renderResult(
 
 		page.classList.add(`result-page--${presentation?.variant ?? "cyan"}`)
 		resultContent.replaceChildren(
-			createResultContent(resultCharacter, submission),
+			createResultContent(resultCharacter, submission, resultUrl),
 		)
 	} catch (error) {
 		console.error(error)
@@ -96,6 +98,7 @@ async function renderResult(
 function createResultContent(
 	character: Character,
 	submission: Submission,
+	resultUrl: string,
 ): HTMLElement {
 	const wrapper = document.createElement("div")
 	wrapper.className = "result-card__result-layout"
@@ -108,7 +111,28 @@ function createResultContent(
 	image.src = character.imageUrl
 	image.alt = character.name
 
-	visual.append(image)
+	const copyButton = document.createElement("button")
+	copyButton.className = "result-card__copy-button"
+	copyButton.type = "button"
+	copyButton.textContent = "Copy result link"
+
+	copyButton.addEventListener("click", async () => {
+		try {
+			await navigator.clipboard.writeText(resultUrl)
+
+			copyButton.textContent = "Link copied"
+
+			setTimeout(() => {
+				copyButton.textContent = "Copy result link"
+			}, 2000)
+		} catch (error) {
+			console.error(error)
+
+			copyButton.textContent = "Could not copy link"
+		}
+	})
+
+	visual.append(image, copyButton)
 
 	const content = document.createElement("div")
 	content.className = "result-card__main"
@@ -149,6 +173,7 @@ function createResultContent(
 		catchphrase,
 		traits,
 	)
+
 	wrapper.append(visual, content)
 
 	return wrapper

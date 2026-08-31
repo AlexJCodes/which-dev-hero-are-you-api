@@ -22,3 +22,13 @@ export async function createSubmission(
 
 	return response.json()
 }
+
+export async function getSubmissionById(id: string): Promise<Submission> {
+	const response = await fetch(`${API_BASE_URL}/submissions/${id}`)
+
+	if (!response.ok) {
+		throw new Error("Failed to fetch submission.")
+	}
+
+	return response.json()
+}

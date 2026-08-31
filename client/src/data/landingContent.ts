@@ -11,17 +11,17 @@ export const floatingCodeSymbols = [
 export const landingTeaserHeroes = [
 	{
 		id: "tony-stark",
-		name: "Tony Stark",
-		developerType: "The AI-Augmented Engineer",
+		name: "The Promptsmith",
+		developerType: "The Prototype Hero",
 	},
 	{
 		id: "yoda",
-		name: "Yoda",
+		name: "Elder Byte",
 		developerType: "The Wise Refactor Master",
 	},
 	{
 		id: "batman",
-		name: "Batman",
+		name: "The Night Architect",
 		developerType: "The Night Shift Architect",
 	},
 ]

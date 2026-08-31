@@ -22,7 +22,7 @@ INSERT INTO characters (
 	JSON_ARRAY('Speed', 'Innovation', 'Prototyping'),
 	JSON_ARRAY('Technical debt', 'Overengineering', 'Skipping tests'),
 	'I built this overnight.',
-	'/images/tony-stark.png'
+	'/images/the-promptsmith.webp'
 ),
 (
 	'deadpool',
@@ -32,7 +32,7 @@ INSERT INTO characters (
 	JSON_ARRAY('Creativity', 'Debugging under pressure', 'Humor'),
 	JSON_ARRAY('Messy commits', 'Chaotic structure', 'Dangerous shortcuts'),
 	'It works. Don''t ask why.',
-	'/images/deadpool.png'
+	'/images/the-chaotic-debugger.webp'
 ),
 (
 	'yoda',
@@ -42,7 +42,7 @@ INSERT INTO characters (
 	JSON_ARRAY('Clean code', 'Patience', 'Refactoring'),
 	JSON_ARRAY('Can overthink', 'Moves slowly at first', 'Hates quick hacks'),
 	'Refactor you must.',
-	'/images/yoda.png'
+	'/images/the-wise-refactor-master.webp'
 ),
 (
 	'batman',
@@ -52,7 +52,7 @@ INSERT INTO characters (
 	JSON_ARRAY('Planning', 'Architecture', 'Documentation'),
 	JSON_ARRAY('Perfectionism', 'Works too late', 'Trust issues with dependencies'),
 	'I only merge after midnight.',
-	'/images/batman.png'
+	'/images/the-nightshift-architect.webp'
 ),
 (
 	'buzz-lightyear',
@@ -62,7 +62,7 @@ INSERT INTO characters (
 	JSON_ARRAY('Energy', 'Curiosity', 'Fast learning'),
 	JSON_ARRAY('Skips planning', 'Trusts tutorials too much', 'Deploys with hope'),
 	'To production and beyond!',
-	'/images/buzz-lightyear.png'
+	'/images/the-overconfident-junior.webp'
 ),
 (
 	'darth-vader',
@@ -72,7 +72,7 @@ INSERT INTO characters (
 	JSON_ARRAY('Discipline', 'Code quality', 'Standards'),
 	JSON_ARRAY('Too strict', 'Scary reviews', 'Low tolerance for messy naming'),
 	'This code has failed me for the last time.',
-	'/images/darth-vader.png'
+	'/images/the-ruthless-code-reviewer.webp'
 );
 
 -------------------------------------------

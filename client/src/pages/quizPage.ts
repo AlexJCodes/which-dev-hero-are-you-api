@@ -5,6 +5,7 @@ import type { AnswerOption, Question } from "../types/question.types"
 
 type QuizPageOptions = {
 	onQuizComplete: (answers: string[]) => void
+	onExitQuiz: () => void
 }
 
 const answerLetters = ["A", "B", "C", "D", "E", "F"]
@@ -14,22 +15,42 @@ export function createQuizPage(options: QuizPageOptions): HTMLElement {
 	page.className = "quiz-page"
 
 	page.innerHTML = `
+		<button
+			class="quiz-page__exit"
+			type="button"
+			data-action="exit-quiz"
+			aria-label="Exit quiz"
+		>
+			×
+		</button>
+
 		<section class="quiz-shell">
 			<p class="quiz-page__status">Loading questions...</p>
 		</section>
 	`
 
-	renderQuiz(page, options)
+	const exitButton = page.querySelector<HTMLButtonElement>(
+		'[data-action="exit-quiz"]',
+	)
+	const quizShell = page.querySelector<HTMLElement>(".quiz-shell")
+
+	if (!exitButton || !quizShell) {
+		throw new Error("Quiz page elements were not found.")
+	}
+
+	exitButton.addEventListener("click", options.onExitQuiz)
+
+	renderQuiz(quizShell, options)
 
 	return page
 }
 
-async function renderQuiz(page: HTMLElement, options: QuizPageOptions) {
+async function renderQuiz(quizShell: HTMLElement, options: QuizPageOptions) {
 	try {
 		const questions = await getQuestions()
 
 		if (questions.length === 0) {
-			page.innerHTML = `
+			quizShell.innerHTML = `
 				<section class="quiz-shell">
 					<p class="quiz-page__status">No questions were found.</p>
 				</section>
@@ -49,7 +70,7 @@ async function renderQuiz(page: HTMLElement, options: QuizPageOptions) {
 				throw new Error("Current question was not found.")
 			}
 
-			page.replaceChildren(
+			quizShell.replaceChildren(
 				createQuestionView({
 					question: currentQuestion,
 					currentQuestionIndex,
@@ -78,7 +99,7 @@ async function renderQuiz(page: HTMLElement, options: QuizPageOptions) {
 			)
 
 			function renderSelectedState() {
-				page.replaceChildren(
+				quizShell.replaceChildren(
 					createQuestionView({
 						question: currentQuestion,
 						currentQuestionIndex,
@@ -112,7 +133,7 @@ async function renderQuiz(page: HTMLElement, options: QuizPageOptions) {
 	} catch (error) {
 		console.error(error)
 
-		page.innerHTML = `
+		quizShell.innerHTML = `
 			<section class="quiz-shell">
 				<p class="quiz-page__status">
 					Could not load questions. Make sure the API is running.

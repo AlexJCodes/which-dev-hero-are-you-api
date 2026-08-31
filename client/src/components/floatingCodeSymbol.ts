@@ -3,7 +3,9 @@ export type FloatingCodeSymbol = {
 	modifier: string
 }
 
-export function createFloatingCodeSymbol(symbol: FloatingCodeSymbol): HTMLElement {
+export function createFloatingCodeSymbol(
+	symbol: FloatingCodeSymbol,
+): HTMLElement {
 	const element = document.createElement("span")
 
 	element.className = `landing-symbol landing-symbol--${symbol.modifier}`

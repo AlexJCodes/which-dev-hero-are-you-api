@@ -12,6 +12,11 @@ export function createCharacterCard(character: Character): HTMLElement {
 	const visual = document.createElement("div")
 	visual.className = "character-card__visual"
 
+	const image = document.createElement("img")
+	image.className = "character-card__image"
+	image.src = character.imageUrl
+	image.alt = character.name
+
 	const label = document.createElement("span")
 	label.className = "character-card__label"
 	label.textContent = presentation?.shortLabel ?? "DEV"
@@ -20,7 +25,7 @@ export function createCharacterCard(character: Character): HTMLElement {
 	visualText.className = "character-card__visual-text"
 	visualText.textContent = presentation?.visualLabel ?? "Developer mode"
 
-	visual.append(label, visualText)
+	visual.append(image)
 
 	const content = document.createElement("div")
 	content.className = "character-card__content"

@@ -1,7 +1,10 @@
 import { createBackgroundBlobs } from "../components/backgroundBlobs"
 import { createFloatingCodeSymbol } from "../components/floatingCodeSymbol"
 import { createHeroTeaserCard } from "../components/heroTeaserCard"
-import { floatingCodeSymbols, landingTeaserHeroes } from "../data/landingContent"
+import {
+	floatingCodeSymbols,
+	landingTeaserHeroes,
+} from "../data/landingContent"
 
 type LandingPageOptions = {
 	onStartQuiz: (username: string) => void
@@ -66,7 +69,9 @@ export function createLandingPage(options: LandingPageOptions): HTMLElement {
 
 	page.append(...Array.from(content.children))
 
-	const startButton = page.querySelector<HTMLButtonElement>('[data-action="start"]')
+	const startButton = page.querySelector<HTMLButtonElement>(
+		'[data-action="start"]',
+	)
 	const exploreButton = page.querySelector<HTMLButtonElement>(
 		'[data-action="explore"]',
 	)

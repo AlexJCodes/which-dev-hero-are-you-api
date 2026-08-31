@@ -73,6 +73,13 @@ export function renderApp(app: HTMLDivElement) {
 						`
 					}
 				},
+
+				onExitQuiz: () => {
+					latestSubmission = null
+					playerName = "Anonymous Dev"
+					currentScreen = "landing"
+					renderCurrentScreen()
+				},
 			})
 
 			app.append(quizPage)

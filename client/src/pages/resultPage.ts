@@ -69,7 +69,9 @@ async function renderResult(
 		const presentation = heroPresentation[resultCharacter.id]
 
 		page.classList.add(`result-page--${presentation?.variant ?? "cyan"}`)
-		resultContent.replaceChildren(createResultContent(resultCharacter, submission))
+		resultContent.replaceChildren(
+			createResultContent(resultCharacter, submission),
+		)
 	} catch (error) {
 		console.error(error)
 
@@ -95,23 +97,18 @@ function createResultContent(
 	character: Character,
 	submission: Submission,
 ): HTMLElement {
-	const presentation = heroPresentation[character.id]
-
 	const wrapper = document.createElement("div")
 	wrapper.className = "result-card__result-layout"
 
 	const visual = document.createElement("div")
 	visual.className = "result-card__visual"
 
-	const label = document.createElement("span")
-	label.className = "result-card__label"
-	label.textContent = presentation?.shortLabel ?? "DEV"
+	const image = document.createElement("img")
+	image.className = "result-card__image"
+	image.src = character.imageUrl
+	image.alt = character.name
 
-	const visualText = document.createElement("p")
-	visualText.className = "result-card__visual-text"
-	visualText.textContent = presentation?.visualLabel ?? "Developer mode"
-
-	visual.append(label, visualText)
+	visual.append(image)
 
 	const content = document.createElement("div")
 	content.className = "result-card__main"
@@ -144,7 +141,14 @@ function createResultContent(
 		createTraitList("Watch out for", character.weaknesses),
 	)
 
-	content.append(eyebrow, title, developerType, description, catchphrase, traits)
+	content.append(
+		eyebrow,
+		title,
+		developerType,
+		description,
+		catchphrase,
+		traits,
+	)
 	wrapper.append(visual, content)
 
 	return wrapper

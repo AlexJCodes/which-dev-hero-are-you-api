@@ -36,8 +36,12 @@ export function createExplorePage(options: ExplorePageOptions): HTMLElement {
 		</section>
 	`
 
-	const backButton = page.querySelector<HTMLButtonElement>('[data-action="back"]')
-	const startButton = page.querySelector<HTMLButtonElement>('[data-action="start"]')
+	const backButton = page.querySelector<HTMLButtonElement>(
+		'[data-action="back"]',
+	)
+	const startButton = page.querySelector<HTMLButtonElement>(
+		'[data-action="start"]',
+	)
 	const charactersSection = page.querySelector<HTMLElement>(".characters")
 
 	if (!backButton || !startButton || !charactersSection) {

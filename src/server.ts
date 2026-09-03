@@ -24,11 +24,11 @@ app.use(helmet())
 app.use(express.json())
 
 // Middleware to enable CORS
-const allowedOrigin = env.clientOrigin
+const allowedOrigins = env.clientOrigins
 
 app.use(
 	cors({
-		origin: allowedOrigin,
+		origin: allowedOrigins,
 	}),
 )
 

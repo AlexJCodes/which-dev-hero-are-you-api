@@ -3,3 +3,7 @@ dist
 .env
 certs/
 certs/ca.pem
+
+# Frontend environment variables
+client/.env
+client/.env.local

@@ -15,7 +15,7 @@ INSERT INTO characters (
 	'You turn vague ideas into working prototypes with prompts, tools, and dangerous momentum. Your speed is impressive, but your technical debt keeps a quiet backlog of revenge.',
 	JSON_ARRAY('Speed', 'Innovation', 'Prototyping'),
 	JSON_ARRAY('Technical debt', 'Overengineering', 'Skipping tests'),
-	'Give me a prompt and a deadline.',
+	'I built this over night.',
 	'/images/the-promptsmith.webp'
 ),
 (
@@ -35,7 +35,7 @@ INSERT INTO characters (
 	'You slow things down just enough to make them better. You sense messy architecture early, refactor carefully, and leave the codebase calmer than you found it.',
 	JSON_ARRAY('Clean code', 'Patience', 'Refactoring'),
 	JSON_ARRAY('Can overthink', 'Moves slowly at first', 'Hates quick hacks'),
-	'Small changes, cleaner code.',
+	'Refactor you must!',
 	'/images/the-wise-refactor-master.webp'
 ),
 (
@@ -45,7 +45,7 @@ INSERT INTO characters (
 	'You plan in dark mode, document before you build, and keep a backup plan for your backup branch. Nothing enters production without structure.',
 	JSON_ARRAY('Planning', 'Architecture', 'Documentation'),
 	JSON_ARRAY('Perfectionism', 'Works too late', 'Trust issues with dependencies'),
-	'Design first. Merge later.',
+	'Night-mode activaded.',
 	'/images/the-nightshift-architect.webp'
 ),
 (
@@ -55,7 +55,7 @@ INSERT INTO characters (
 	'You bring energy, optimism, and just enough chaos to make every sprint exciting. You may not know the full scope, but you are already halfway through the feature.',
 	JSON_ARRAY('Energy', 'Curiosity', 'Fast learning'),
 	JSON_ARRAY('Skips planning', 'Trusts tutorials too much', 'Deploys with hope'),
-	'Ship it to orbit.',
+	'To deployment and beyond!.',
 	'/images/the-overconfident-junior.webp'
 ),
 (
@@ -65,6 +65,6 @@ INSERT INTO characters (
 	'You bring order to chaotic codebases. Your standards are high, your patience is limited, and no pull request escapes your inspection.',
 	JSON_ARRAY('Discipline', 'Code quality', 'Standards'),
 	JSON_ARRAY('Too strict', 'Scary reviews', 'Low tolerance for messy naming'),
-	'Clean code, or no merge.',
+	'I find your lack of tests disturbing.',
 	'/images/the-ruthless-code-reviewer.webp'
 );

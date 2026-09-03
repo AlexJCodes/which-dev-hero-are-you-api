@@ -2,6 +2,7 @@ import { getCharacters } from "../api/charactersApi"
 import { heroPresentation } from "../data/heroPresentation"
 import type { Character } from "../types/character.types"
 import type { Submission } from "../types/submission.types"
+import { createStatusMessage } from "../components/statusMessage"
 
 type ResultPageOptions = {
 	submission: Submission
@@ -58,6 +59,14 @@ async function renderResult(
 	submission: Submission,
 	resultUrl: string,
 ) {
+	resultContent.replaceChildren(
+		createStatusMessage({
+			variant: "loading",
+			title: "Loading hero...",
+			message: "Matching your saved result with the right developer hero.",
+		}),
+	)
+
 	try {
 		const characters = await getCharacters()
 		const resultCharacter = characters.find(
@@ -65,33 +74,35 @@ async function renderResult(
 		)
 
 		if (!resultCharacter) {
-			throw new Error("Result character was not found.")
+			resultContent.replaceChildren(
+				createStatusMessage({
+					variant: "error",
+					title: "Hero not found",
+					message:
+						"The result was loaded, but the matching developer hero could not be found.",
+				}),
+			)
+
+			return
 		}
 
 		const presentation = heroPresentation[resultCharacter.id]
 
 		page.classList.add(`result-page--${presentation?.variant ?? "cyan"}`)
+
 		resultContent.replaceChildren(
 			createResultContent(resultCharacter, submission, resultUrl),
 		)
 	} catch (error) {
 		console.error(error)
 
-		resultContent.innerHTML = `
-			<p class="result-card__eyebrow">Your result is in</p>
-			<h1 class="result-card__title">You are...</h1>
-			<p class="result-card__fallback"></p>
-		`
-
-		const fallback = resultContent.querySelector<HTMLParagraphElement>(
-			".result-card__fallback",
+		resultContent.replaceChildren(
+			createStatusMessage({
+				variant: "error",
+				title: "Could not load hero",
+				message: "The result page could not load the developer hero data.",
+			}),
 		)
-
-		if (!fallback) {
-			throw new Error("Fallback result element was not found.")
-		}
-
-		fallback.textContent = submission.resultId
 	}
 }
 

@@ -25,5 +25,6 @@ export const env = {
 	dbUser: getRequiredEnvValue('DB_USER'),
 	dbPassword: getRequiredEnvValue('DB_PASSWORD'),
 	dbName: getRequiredEnvValue('DB_NAME'),
-	dbSslCaPath: getRequiredEnvValue('DB_SSL_CA_PATH'),
+	dbSslCa: process.env.DB_SSL_CA,
+	dbSslCaPath: process.env.DB_SSL_CA_PATH,
 }

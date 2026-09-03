@@ -43,9 +43,6 @@ app.use('/health', healthRouter)
 // Route - questions
 app.use('/questions', questionsRouter)
 
-// Route - questions
-app.use('/questions', questionsRouter)
-
 // Route - characters
 app.use('/characters', charactersRouter)
 
@@ -66,5 +63,5 @@ app.use(errorHandler)
 
 // Start the server
 app.listen(PORT, () => {
-	console.log(`Server is running on http://localhost:${PORT}`)
+	console.log(`Server is running on port ${PORT}`)
 })

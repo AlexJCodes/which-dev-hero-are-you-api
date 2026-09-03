@@ -1,244 +1,114 @@
-# Which Dev Hero Are You? API
+# Which Dev Hero Are You?
 
-A TypeScript and Express REST API for a personality-style quiz where users discover which fictional "dev hero" matches their coding style.
+A fullstack developer personality quiz where users answer coding-related questions and get matched with an original developer hero archetype.
 
-The project started as a school API exercise, but has been developed further into a more complete backend project with MySQL, validation, error handling, security middleware, database relations and SQL joins.
+The project started as an API and database assignment, but has been expanded with a custom frontend, shareable quiz results, original hero characters, and a more polished portfolio-style user experience.
 
-## Features
+## Overview
 
-- REST API built with Express and TypeScript
-- MySQL database hosted on Aiven
-- MySQL connection pool using `mysql2`
-- SSL database connection using Aiven CA certificate
-- Environment-based configuration with `.env`
-- Repository layer for database access
-- CRUD operations for quiz submissions
-- Character and question data fetched from MySQL
-- Character comments with foreign key relation
-- SQL joins for fetching characters with related comments
-- Search and sort support for characters
-- Standardized API error responses
-- Global error handler
-- Not found handler
-- Basic security headers with Helmet
-- CORS configuration via environment variables
-- Request validation for submissions and comments
-- Health check endpoint for API and database status
+Users can:
 
+- enter a name before starting the quiz
+- answer multiple quiz questions
+- get matched with a developer hero
+- explore all available heroes
+- copy a shareable result link
+- reload a shared result URL and fetch the result from the API
+
+The frontend consumes data from the Express API, while the backend handles quiz questions, characters, submissions, and result calculation.
 
 ## Tech Stack
 
 ### Backend
 
-![Node.js](https://img.shields.io/badge/Node.js-Backend-339933?logo=node.js&logoColor=white)
-![Express](https://img.shields.io/badge/Express-API-000000?logo=express&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-Language-3178C6?logo=typescript&logoColor=white)
+- Node.js
+- Express
+- TypeScript
+- MySQL
+- Aiven MySQL
+- mysql2
+- dotenv
+- CORS
+- Helmet
 
-### Database
+### Frontend
 
-![MySQL](https://img.shields.io/badge/MySQL-Database-4479A1?logo=mysql&logoColor=white)
-![Aiven](https://img.shields.io/badge/Aiven-Cloud%20Database-FF5722)
-![mysql2](https://img.shields.io/badge/mysql2-Driver-4479A1)
+- Vite
+- TypeScript
+- SCSS
+- Vanilla DOM manipulation
+- Fetch API
+- Biome
 
-### Security & Config
+## Features
 
-![Helmet](https://img.shields.io/badge/Helmet-Security-111827)
-![CORS](https://img.shields.io/badge/CORS-Configured-2563EB)
-![dotenv](https://img.shields.io/badge/dotenv-Environment-8DD6F9)
-![SSL](https://img.shields.io/badge/SSL-Aiven%20CA%20Certificate-16A34A)
+### Quiz Flow
 
-### Development Tools
+The quiz questions are fetched from the API. Each answer is connected to a character, and once the quiz is completed, the backend calculates the final result.
 
-![Biome](https://img.shields.io/badge/Biome-Lint%20%26%20Format-60A5FA)
-![Nodemon](https://img.shields.io/badge/Nodemon-Dev%20Server-76D04B)
-![ts-node](https://img.shields.io/badge/ts--node-TypeScript%20Runtime-3178C6)
+### Original Developer Heroes
+
+The app uses original developer hero archetypes instead of existing pop culture characters.
+
+Examples:
+
+- The Promptsmith
+- Glitch Riot
+- Elder Byte
+- The Night Architect
+- Orbit Junior
+- The Code Empress
+
+### Shareable Results
+
+When a quiz is completed, the frontend updates the URL with the created submission ID.
+
+Example:
+
+```txt
+?submission=<submission-id>
+```
+
+This allows the result page to be reloaded or shared. When the URL contains a submission ID, the frontend fetches the saved submission from the API and renders the correct result.
+
+### Explore Heroes
+
+Users can view all possible developer heroes on a dedicated explore page.
+
+### Deployment Preparation
+
+The frontend uses an environment variable for the API base URL:
+
+```env
+VITE_API_BASE_URL=http://localhost:3000
+```
+
+The backend supports configurable client origins for local development and future deployment.
 
 ## Project Structure
 
 ```txt
-src/
-├── config/
-│   ├── database.ts
-│   ├── env.ts
-├── middleware/
-│   ├── errorHandler.ts
-│   └── notFoundHandler.ts
-├── repositories/
-│   ├── charactersRepository.ts
-│   ├── commentsRepository.ts
-|   ├── healthRepository.ts
-│   ├── questionsRepository.ts
-│   ├── statsRepository.ts
-│   └── submissionsRepository.ts
-├── routes/
-│   ├── characters.routes.ts
-│   ├── comments.routes.ts
-│   ├── health.routes.ts
-│   ├── questions.routes.ts
-│   ├── stats.routes.ts
-│   └── submissions.routes.ts
-├── types/
-│   └── quiz.types.ts
-├── utils/
-│   ├── apiResponse.ts
-│   ├── calculateResult.ts
-│   ├── validateAnswers.ts
-│   └── validateCommentInput.ts
-└── server.ts
+which-dev-hero-are-you-api/
+├── client/
+│   ├── public/
+│   │   └── images/
+│   └── src/
+│       ├── api/
+│       ├── components/
+│       ├── data/
+│       ├── pages/
+│       ├── styles/
+│       └── types/
+├── database/
+├── src/
+│   ├── config/
+│   ├── controllers/
+│   ├── routes/
+│   └── utils/
+└── README.md
 ```
-
----
-
-## Database
-
-The API uses a MySQL database with the following main tables:
-
-```txt
-characters
-questions
-answer_options
-submissions
-character_comments
-```
-
-### Relations
-
-```txt
-questions.id
-↓
-answer_options.question_id
-```
-
-```txt
-characters.id
-↓
-answer_options.character_id
-```
-
-```txt
-characters.id
-↓
-submissions.result_id
-```
-
-```txt
-characters.id
-↓
-character_comments.character_id
-```
-
-The `character_comments` table is connected to characters with a foreign key. This makes it possible to fetch a `character` together with its comments using SQL joins.
-
-## Environment Variables
-
-Create a .env file based on .env.example.
-
-```env
-PORT=3000
-CLIENT_ORIGIN=http://localhost:5173
-
-DB_HOST=your-aiven-host
-DB_PORT=12345
-DB_USER=your-db-user
-DB_PASSWORD=your-db-password
-DB_NAME=dev_hero_db
-DB_SSL_CA_PATH=certs/ca.pem
-```
-
-**Important**: The real .env file should never be committed.
-
-## SSL Certificate
-
-Aiven requires SSL for MySQL connections.
-
-Download the Aiven CA certificate and save it locally as:
-
-```txt
-certs/ca.pem
-```
-
-**Important**: The certs/ folder is ignored by Git and should not be committed.
-
-## Getting Started
-
-Install dependencies:
-
-**1.**
-```bash
-npm install
-```
-
-**2.**
-Create your .env file:
-
-```bash
-cp .env.example .env
-```
-
-**3.**
-Add your Aiven MySQL credentials to .env.
-
-**4.**
-Run the database schema and seed files in your MySQL database:
-
-```txt
-database/schema.sql
-database/seed.sql
-```
-
-**5.** 
-
-Start the development server:
-
-```bash
-npm run dev
-```
-
----
-
-The API will run on:
-
-```txt
-http://localhost:3000
-```
-
-## Scripts
-
-```bash
-npm run dev
-```
-
-Starts the development server with Nodemon.
-
-```bash
-npm run check
-```
-
-Run Biome checks.
-
-```bash
-npm run check:fix
-```
-
-Run biome checks and applies safe fixes.
-
-```bash
-npm run build
-```
-
-Compiles TypeScript.
 
 ## API Endpoints
-
-### Root
-
-```http
-GET /
-```
-
-Returns a welcome message.
-
----
 
 ### Health
 
@@ -246,68 +116,12 @@ Returns a welcome message.
 GET /health
 ```
 
-Returns API and database health status.
-
-**Example response when everything is working:**
-
-```json
-{
-	"status": "ok",
-	"database": "connected"
-}
-```
-
-**Example response when the API is running but the database is unavailable:**
-
-```json
-{
-	"status": "degraded",
-	"database": "disconnected"
-}
-```
-
----
-
 ### Characters
 
 ```http
 GET /characters
-```
-
-Returns all characters.
-
-**Supports search and sorting:**
-```http
-GET /characters?search=dark&sort=name&order=asc
-```
-
-```http
 GET /characters/:id
 ```
-
-Returns one character with related comments.
-
-```http
-GET /characters/:characterId/comments
-```
-
-Returns all comments for a character.
-
-```http
-POST /characters/:characterId/comments
-```
-
-Creates a comment for a character.
-
-**Example body:**
-```json
-{
-	"author": "Alex",
-	"content": "This is painfully accurate. Dark mode architect energy."
-}
-```
-
----
 
 ### Questions
 
@@ -315,145 +129,147 @@ Creates a comment for a character.
 GET /questions
 ```
 
-Returns all quiz questions with answer options.
-
-```http
-GET /questions/:id
-```
-
-Returns one quiz question with answer options.
-
 ### Submissions
 
 ```http
 GET /submissions
-```
-
-Returns all quiz submissions.
-
-```http
 GET /submissions/:id
-```
-
-Returns one quiz submission.
-
-```http
 POST /submissions
-```
-
-Creates a new quiz submission.
-
-**Example body:**
-```json
-{
-	"username": "Alex",
-	"answers": ["tony-stark", "deadpool", "tony-stark"]
-}
-```
-
-### Patch & Delete
-
-```http
-PATCH /submissions/:id
-```
-
-Updates a quiz submission.
-
-```http
 DELETE /submissions/:id
 ```
 
-Deletes a quiz submission.
+Example request:
 
-### Comments
-
-```http
-PATCH /comments/:id
-```
-
-Updates a comment.
-
-```http
-DELETE /comments/:id
-```
-
-Deletes a comment.
-
-### Stats
-
-```http
-GET /stats
-```
-
-Returns quiz statistics from MySQL.
-
-**Example response:**
 ```json
 {
-	"totalSubmissions": 3,
-	"resultCounts": {
-		"tony-stark": 2,
-		"batman": 1
-	},
-	"mostCommonResult": "tony-stark"
+	"username": "Alex",
+	"answers": ["tony-stark", "deadpool", "yoda"]
 }
 ```
 
-## Security Notes
+Example response:
 
-This project includes several backend security practices:
-
-- Environment variables for sensitive configuration
-- .env ignored by Git
-- Aiven MySQL SSL connection with CA certificate
-- Helmet for security-related HTTP headers
-- CORS configured through environment variables
-- SQL placeholders for user input
-- Backend validation for request bodies
-- Standardized error responses
-- Global error handling
-- Not found handling
-
-**User input is never inserted directly into SQL strings. Dynamic values are passed through placeholders.**
-
-**Example**:
-
-```ts
-WHERE id = ?
+```json
+{
+	"id": "submission-id",
+	"username": "Alex",
+	"answers": ["tony-stark", "deadpool", "yoda"],
+	"resultId": "tony-stark",
+	"createdAt": "2026-08-31T10:00:00.000Z"
+}
 ```
 
-**Instead of:**
+## Environment Variables
 
-```ts
-`WHERE id = '${id}'`
+### Backend
+
+Create a `.env` file in the project root.
+
+```env
+PORT=3000
+CLIENT_ORIGIN=http://localhost:5173
+
+DB_HOST=
+DB_PORT=
+DB_USER=
+DB_PASSWORD=
+DB_NAME=
+DB_SSL_CA_PATH=
 ```
 
-Which would be in a risk of SQL injections.
+### Frontend
 
-## Current Status
+Create a `.env` file inside the `client` folder.
 
-**The API currently supports:**
+```env
+VITE_API_BASE_URL=http://localhost:3000
+```
 
-- Database-backed characters
-- Database-backed questions
-- Database-backed submissions
-- Database-backed stats
-- Character comments
-- SQL joins for related data
-- Search and sort for characters
-- Health check endpoint for API and database status
+A frontend example file is included:
 
-**Next Steps**:
+```txt
+client/.env.example
+```
 
-- Build a Vite frontend client
-- Add quiz UI with radio buttons
-- Display character result cards
-- Render character comments in the frontend
-- Add README screenshots
-- Add deployment instructions
-- Add automated tests
-- Add rate limiting
+## Getting Started
 
+### 1. Install backend dependencies
 
+```bash
+npm install
+```
 
+### 2. Install frontend dependencies
 
+```bash
+cd client
+npm install
+```
+
+### 3. Start the backend
+
+From the project root:
+
+```bash
+npm run dev
+```
+
+The API runs on:
+
+```txt
+http://localhost:3000
+```
+
+### 4. Start the frontend
+
+From the `client` folder:
+
+```bash
+npm run dev
+```
+
+The frontend usually runs on:
+
+```txt
+http://localhost:5173
+```
+
+If port `5173` is already in use, Vite may start on `5174`.
+
+## Development Checks
+
+### Frontend
+
+From the `client` folder:
+
+```bash
+npm run format
+npm run verify
+```
+
+### Backend
+
+From the project root:
+
+```bash
+npm run build
+```
+
+## Screenshots
+
+Screenshots will be added after final UI polish and deployment.
+
+## Future Improvements
+
+Planned improvements:
+
+- deploy frontend with Vercel
+- deploy backend with a Node-compatible hosting provider
+- add Open Graph metadata for social sharing
+- create visual result share cards
+- test responsive layout on real mobile devices
+- add final error/loading state polish
+
+## Author
+
+Created by Alexander Johansson as part of a frontend/API development portfolio project.

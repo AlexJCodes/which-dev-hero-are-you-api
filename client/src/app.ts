@@ -4,6 +4,7 @@ import { createLandingPage } from "./pages/landingPage"
 import { createQuizPage } from "./pages/quizPage"
 import { createResultPage } from "./pages/resultPage"
 import type { Submission } from "./types/submission.types"
+import { createStatusMessage } from "./components/statusMessage"
 
 type Screen = "landing" | "quiz" | "result" | "explore"
 
@@ -34,21 +35,39 @@ function clearSubmissionUrl() {
 }
 
 function renderLoadingState(app: HTMLDivElement) {
-	app.innerHTML = `
-		<main class="page">
-			<h1>Loading result...</h1>
-			<p>Please wait while we load your dev hero.</p>
-		</main>
-	`
+	const page = document.createElement("main")
+	page.className = "page page--centered"
+
+	page.append(
+		createStatusMessage({
+			variant: "loading",
+			title: "Loading result...",
+			message: "Fetching your saved developer hero.",
+		}),
+	)
+
+	app.replaceChildren(page)
 }
 
 function renderResultErrorState(app: HTMLDivElement) {
-	app.innerHTML = `
-		<main class="page">
-			<h1>Could not load result</h1>
-			<p>The shared result link could not be found. Please try taking the quiz again.</p>
-		</main>
-	`
+	const page = document.createElement("main")
+	page.className = "page page--centered"
+
+	page.append(
+		createStatusMessage({
+			variant: "error",
+			title: "Result not found",
+			message:
+				"The shared result link could not be loaded. Try taking the quiz again.",
+			actionLabel: "Back to start",
+			onAction: () => {
+				currentScreen = "landing"
+				renderApp(app)
+			},
+		}),
+	)
+
+	app.replaceChildren(page)
 }
 
 export function renderApp(app: HTMLDivElement) {
@@ -108,12 +127,24 @@ export function renderApp(app: HTMLDivElement) {
 					} catch (error) {
 						console.error(error)
 
-						app.innerHTML = `
-							<main class="page">
-								<h1>Could not submit quiz</h1>
-								<p>Please make sure the API is running.</p>
-							</main>
-						`
+						const page = document.createElement("main")
+						page.className = "page page--centered"
+
+						page.append(
+							createStatusMessage({
+								variant: "error",
+								title: "Could not submit quiz",
+								message:
+									"Your result could not be saved right now. Make sure the API is running.",
+								actionLabel: "Try again",
+								onAction: () => {
+									currentScreen = "quiz"
+									renderCurrentScreen()
+								},
+							}),
+						)
+
+						app.replaceChildren(page)
 					}
 				},
 

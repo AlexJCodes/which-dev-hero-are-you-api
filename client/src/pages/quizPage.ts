@@ -2,6 +2,7 @@ import { getQuestions } from "../api/questionsApi"
 import { createProgressBar } from "../components/progressBar"
 import { createQuizAnswerCard } from "../components/quizAnswerCard"
 import type { AnswerOption, Question } from "../types/question.types"
+import { createStatusMessage } from "../components/statusMessage"
 
 type QuizPageOptions = {
 	onQuizComplete: (answers: string[]) => void
@@ -46,15 +47,27 @@ export function createQuizPage(options: QuizPageOptions): HTMLElement {
 }
 
 async function renderQuiz(quizShell: HTMLElement, options: QuizPageOptions) {
+	quizShell.replaceChildren(
+		createStatusMessage({
+			variant: "loading",
+			title: "Loading quiz...",
+			message: "Preparing your developer personality test.",
+		}),
+	)
+
 	try {
 		const questions = await getQuestions()
 
 		if (questions.length === 0) {
-			quizShell.innerHTML = `
-				<section class="quiz-shell">
-					<p class="quiz-page__status">No questions were found.</p>
-				</section>
-			`
+			quizShell.replaceChildren(
+				createStatusMessage({
+					variant: "empty",
+					title: "No questions found",
+					message: "The API responded, but there are no quiz questions yet.",
+					actionLabel: "Back to start",
+					onAction: options.onExitQuiz,
+				}),
+			)
 
 			return
 		}
@@ -133,13 +146,15 @@ async function renderQuiz(quizShell: HTMLElement, options: QuizPageOptions) {
 	} catch (error) {
 		console.error(error)
 
-		quizShell.innerHTML = `
-			<section class="quiz-shell">
-				<p class="quiz-page__status">
-					Could not load questions. Make sure the API is running.
-				</p>
-			</section>
-		`
+		quizShell.replaceChildren(
+			createStatusMessage({
+				variant: "error",
+				title: "Quiz is offline",
+				message: "The questions could not be loaded right now.",
+				actionLabel: "Try again",
+				onAction: () => renderQuiz(quizShell, options),
+			}),
+		)
 	}
 }
 
